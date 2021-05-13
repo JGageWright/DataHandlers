@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
+from sklearn.linear_model import LinearRegression
 
 # Linear Regression
 def Least_sq(x, y):
@@ -67,4 +63,3 @@ def get_SA_sx(reg_x, reg_y):
     num = y_bar ** 2
     denom = (float(reg.coef_)**2) * get_Sumsq(reg_x)
     return (get_sy(reg_x, reg_y) / abs(float(reg.coef_))) * (((1/n) + (num/denom)) ** (1/2))
-
