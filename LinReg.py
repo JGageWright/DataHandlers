@@ -1,4 +1,23 @@
 from sklearn.linear_model import LinearRegression
+import numpy as np
+
+class PolyReg:
+    """
+    Object to hold all information associated with a polynomial model.
+    Polynomial coefficients in order of decreasing degree are in model[i].
+    Note that ss_yy is commonly named ss_tot in other implementations.
+    """
+    def __init__(self, xdata, ydata, order):
+        self.xdata = xdata
+        self.ydata = ydata
+        self.order = order
+        self.model = np.polyfit(xdata, ydata, order)
+        self.residuals = ydata - np.polyval(self.model, xdata)
+        self.ss_res = np.sum(self.residuals ** 2)
+        self.ss_yy = np.sum((ydata - np.mean(ydata)) ** 2)
+        self.ss_xx = np.sum((xdata - np.mean(xdata)) ** 2)
+        self.ss_xy = np.sum((xdata - np.mean(xdata))*(ydata - np.mean(ydata)))
+        self.r_squared = 1 - (self.ss_res / self.ss_yy)
 
 # Linear Regression
 def Least_sq(x, y):

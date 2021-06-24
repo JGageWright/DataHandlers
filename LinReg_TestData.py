@@ -2,7 +2,7 @@ import numpy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize as opt
+# import scipy.optimize as opt
 from importer_snippets import make_ELISA_dataframe
 import LinReg
 
@@ -67,19 +67,9 @@ ss_res = np.sum(residuals**2)
 ss_tot = np.sum((ydata-np.mean(ydata))**2)
 r_squared = 1 - (ss_res / ss_tot)
 
-class PolyReg:
-    def __init__(self, xdata, ydata, order):
-        self.xdata = xdata
-        self.ydata = ydata
-        self.order = order
-        self.model = np.polyfit(xdata, ydata, order)
-        self.residuals = ydata - np.polyval(model, xdata)
-        self.ss_res = np.sum(residuals ** 2)
-        self.ss_tot = np.sum((ydata - np.mean(ydata)) ** 2)
-        self.r_squared = 1 - (ss_res / ss_tot)
 
-
-
-reg = PolyReg(xdata, ydata, 1)
+reg = LinReg.PolyReg(xdata, ydata, 1)
 skregl = LinReg.Least_sq(xdata, ydata)
+
+print(reg.model[0])
 
