@@ -2,9 +2,11 @@ import numpy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-# import scipy.optimize as opt
+import scipy.optimize as opt
+import scipy.stats as stats
 from importer_snippets import make_ELISA_dataframe
 import LinReg
+import statsmodels.api as sm
 
 # Get some test data
 data_path = r'notebooks/testdata_02192021_rhMMP9.txt'  # Used Scan 2
@@ -45,31 +47,23 @@ def grubbs_filter(data):
 
 
 data = grubbs_filter(data)
-xdata = data['Conc'].loc['F':'N']
-ydata = data['Mean'].loc['F':'N']
+xdata = np.array(data['Conc'].loc['F':'N'])
+ydata = np.array(data['Mean'].loc['F':'N'])
 
-#SciPy implementation
+# SciPy implementation
 # def Linear(x, m, b):
 #     return m*x + b
 #
 # popt, pcov = opt.curve_fit(Linear, xdata, ydata)
-#
-# print(popt, pcov, sep='\n')
-# residuals = ydata - Linear(xdata, *popt)
-# ss_res = np.sum(residuals**2)
-# ss_tot = np.sum((ydata-np.mean(ydata))**2)
-# r_squared = 1 - (ss_res / ss_tot)
-
-#Numpy implementation
-model = np.polyfit(xdata, ydata, 1)
-residuals = ydata - np.polyval(model, xdata)
-ss_res = np.sum(residuals**2)
-ss_tot = np.sum((ydata-np.mean(ydata))**2)
-r_squared = 1 - (ss_res / ss_tot)
 
 
 reg = LinReg.PolyReg(xdata, ydata, 1)
-skregl = LinReg.Least_sq(xdata, ydata)
+print(reg.coef)
+print(reg.std_err[0])
+print(reg.s_y)
 
-print(reg.model[0])
+# model, cov = np.polyfit(xdata, ydata, 1, full=False, cov=True)
+# print(model, cov, end='\n')
+#
+# print(np.trace(cov)**2)
 
