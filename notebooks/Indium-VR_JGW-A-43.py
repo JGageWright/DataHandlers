@@ -14,11 +14,10 @@ from LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-# raw = pd.read_csv(r'C:\Users\Administrator\Documents\GitHub\DataHandlers\notebooks\1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
-raw = pd.read_csv(r'1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
-mass = 9.620 #in mg
+raw = pd.read_csv(r'Indium-VR_JGW-A-43.csv')
+mass = 5.491 #in mg
 Therm_Resist = 0.49441 #in K/mW
-beta_choose = 75
+beta_choose = 50
 # --------------------------------------------------------------------------------------------
 
 
@@ -30,7 +29,7 @@ Rate_Corr = PolyReg(df['Heat Rate'], df['Lag Corr. ΔT'], 1)
 R = physical_constants['molar gas constant'][0]
 logHeatRate_vs_Tinv = PolyReg(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'], 1)
 Ea = -2.19 * R * logHeatRate_vs_Tinv.coef[0]
-
+print(Ea)
 # Refine Ea
 # T_chosen is the Corr. Peak Temp (K) at beta_choose
 T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Lag Corr. Temp (K)']
@@ -49,7 +48,7 @@ ax = fig.add_subplot(111)
 ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
 ax.set_xlabel('1/T (K$^{-1}$)')
-ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
+ax.set_title(r"Indium Melt")
 ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
             xycoords=ax.transAxes,
             size=20)
@@ -58,6 +57,7 @@ ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
                logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
                logHeatRate_vs_Tinv.coef[1],
                color='red')
+
 plt.grid()
 plt.show()
 

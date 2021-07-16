@@ -47,7 +47,6 @@ def get_k(Ea, Z, T):
     R = physical_constants['molar gas constant'][0]
     return Z * sp.exp(-Ea / (R * T))
 
-
 def Refine_Ea(Ea, slope, T_chosen):
     '''
     Choose a peak temperature with a moderate heating rate for T_chosen
