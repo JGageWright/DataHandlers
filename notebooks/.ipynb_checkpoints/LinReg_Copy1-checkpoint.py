@@ -25,7 +25,6 @@ class PolyReg:
         self.r_squared = 1 - (self.ss_res / self.ss_yy)
         self.std_err = np.sqrt(np.diag(self.cov))
         self.s_y = np.sqrt(self.ss_res / (len(ydata) - 1 - self.degree))
-        self.roots = np.roots(self.coef)
         
     def report(self):
         '''
@@ -40,6 +39,3 @@ class PolyReg:
         params['s_y'] = self.s_y
         series = pd.Series(params)
         return series
-    
-    def eval(self, x):
-        return np.polyval(self.coef, x)
