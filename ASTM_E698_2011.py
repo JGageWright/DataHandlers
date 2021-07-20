@@ -33,7 +33,7 @@ def get_D(X):
 
 def get_Z(Ea, T_chosen, beta_choose):
     '''
-    Calculates the value of the Arrhenus Prexponential factor
+    Calculates the value of the Arrhenius Prexponential factor
     '''
     Z, beta, E, R, T = sp.symbols('Z beta E R T')
     R = physical_constants['molar gas constant'][0]

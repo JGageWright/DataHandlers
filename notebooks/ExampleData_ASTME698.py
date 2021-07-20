@@ -1,10 +1,5 @@
 import pandas as pd
 import numpy as np
-
-import sympy as sp
-from sympy.interactive import printing
-printing.init_printing(use_latex=True)
-from sympy.parsing.latex import parse_latex
 from scipy.constants import physical_constants
 
 import matplotlib.pyplot as plt
@@ -13,10 +8,14 @@ plt.style.use('..\JGW.mplstyle')
 from ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
 from LinReg import PolyReg
 
+# ----------------------------------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
 beta_choose = 7
-# Typically also raw csv file, mass, and Thermal Resistance
-# This data is in an atypical shape because the correction has already been applied.
+# There is typically also raw csv file, mass, and Thermal Resistance
+# However, this data is in an atypical shape because the correction has already been applied.
+tolerance_frac = 0.005
+T_Arrhenius = 370
+# -----------------------------------------------------------------------------------------------------------------------
 df = pd.read_csv('ExampleData_ASTME698.csv')
 df.columns = ['Heat Rate', 'Corr. Peak Temp (K)']
 df['log10(Heat Rate)'] = np.log10(df.iloc[:, 0])
@@ -32,15 +31,15 @@ T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Corr. Peak Temp (K)']
 ref_Ea = iter_refine(Ea,
                      logHeatRate_vs_Tinv.coef[0],
                      T_chosen,
-                     0.005)
+                     tolerance_frac)
 Z = get_Z(ref_Ea, T_chosen, beta_choose)
-k = get_k(ref_Ea, Z, 370)
+k = get_k(ref_Ea, Z, T_Arrhenius)
 
 report = pd.Series({'Ea':ref_Ea, 'Z':Z, 'k':k})
 print(report)
 
 x, y = 1/df['Corr. Peak Temp (K)'], df['log10(Heat Rate)']
-fig = plt.figure(figsize=(16, 9))
+fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.scatter(x, y)
 ax.set_ylabel(r'log$_{10}$(β)')

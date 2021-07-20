@@ -18,7 +18,10 @@ from LinReg import PolyReg
 raw = pd.read_csv(r'1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
 mass = 9.620 #in mg
 Therm_Resist = 0.49441 #in K/mW
+
 beta_choose = 75
+tolerance_frac = 0.005
+T_Arrhenius = 200
 # --------------------------------------------------------------------------------------------
 
 
@@ -37,14 +40,14 @@ T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Lag Corr. Temp (K)']
 ref_Ea = iter_refine(Ea,
                      logHeatRate_vs_Tinv.coef[0],
                      T_chosen,
-                     0.005)
+                     tolerance_frac)
 Z = get_Z(ref_Ea, T_chosen, beta_choose)
-k = get_k(ref_Ea, Z, 200)
+k = get_k(ref_Ea, Z, T_Arrhenius)
 
 report = pd.Series({'Ea':ref_Ea, 'Z':Z, 'k':k})
 print(report)
 
-fig = plt.figure(figsize=(16,9))
+fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')

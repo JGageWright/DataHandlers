@@ -1,6 +1,6 @@
 # Minor edits to J. Garrett's style from the SciencePlots package:
 
-figure.figsize : 8, 6
+figure.figsize : 12, 8
 
 # Set x axis
 xtick.major.size : 6

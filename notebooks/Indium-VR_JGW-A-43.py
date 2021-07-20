@@ -17,7 +17,10 @@ from LinReg import PolyReg
 raw = pd.read_csv(r'Indium-VR_JGW-A-43.csv')
 mass = 5.491 #in mg
 Therm_Resist = 0.49441 #in K/mW
+
 beta_choose = 50
+T_Arrhenius = 200
+tolerance_frac = 0.005
 # --------------------------------------------------------------------------------------------
 
 
@@ -36,39 +39,37 @@ T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Lag Corr. Temp (K)']
 ref_Ea = iter_refine(Ea,
                      logHeatRate_vs_Tinv.coef[0],
                      T_chosen,
-                     0.005)
+                     tolerance_frac)
 Z = get_Z(ref_Ea, T_chosen, beta_choose)
-k = get_k(ref_Ea, Z, 200)
+k = get_k(ref_Ea, Z, T_Arrhenius)
 
-report = pd.Series({'Ea':ref_Ea, 'Z':Z, 'k':k})
+report = pd.Series({'Ea': ref_Ea, 'Z': Z, 'k': k})
 print(report)
 
-# fig = plt.figure(figsize=(16,9))
-# ax = fig.add_subplot(111)
-# ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
-# ax.set_ylabel(r'log$_{10}$(β)')
-# ax.set_xlabel('1/T (K$^{-1}$)')
-# ax.set_title(r"Indium Melt")
-# ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
-#             xycoords=ax.transAxes,
-#             size=20)
-#
-# ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
-#                logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
-#                logHeatRate_vs_Tinv.coef[1],
-#                color='red')
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
+ax.set_ylabel(r'log$_{10}$(β)')
+ax.set_xlabel('1/T (K$^{-1}$)')
+ax.set_title(r"Indium Melt")
+ax.annotate('R$^2$ = ' + str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
+            xycoords=ax.transAxes,
+            size=20)
+ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
+               logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
+               logHeatRate_vs_Tinv.coef[1], color='red')
 
 # Is the example data more linear than mine?
-y, x = df['Lag Corr. Temp (K)'], df['Heat Rate']
-fig2 = plt.figure(figsize=(16,9))
-ax2 = fig2.add_subplot(111)
-ax2.scatter(x, y)
-ax2.set_ylabel('Peak Temperature (K)')
-ax2.set_xlabel('β (K/min)')
-ax2.set_title(r"Indium Melt")
-
-T_v_beta = PolyReg(x, y, 1)
-ax3 = plt.plot(x, T_v_beta.coef[0]*x + T_v_beta.coef[1])
+# y, x = df['Lag Corr. Temp (K)'], df['Heat Rate']
+# fig2 = plt.figure()
+# ax2 = fig2.add_subplot(111)
+# ax2.scatter(x, y)
+# ax2.set_ylabel('Peak Temperature (K)')
+# ax2.set_xlabel('β (K/min)')
+# ax2.set_title(r"Indium Melt")
+#
+# T_v_beta = PolyReg(x, y, 1)
+# ax3 = plt.plot(x, T_v_beta.coef[0]*x + T_v_beta.coef[1])
 
 plt.grid()
 plt.show()
@@ -84,7 +85,9 @@ plt.show()
 # # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
 # # ax3 = ax1.twiny()
 # # ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
-#
+
+
+
 # # Try Kissinger Equation
 # df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Lag Corr. Temp (K)']**2)
 # k_fig, k_ax = plt.subplots()
