@@ -6,7 +6,7 @@ plt.style.use('..\JGW.mplstyle')
 
 # Notebook version only
 # import os
-# os.chdir(r'C:\Users\Administrator\Documents\GitHub\DataHandlers\notebooks')
+# os.chdir(r'C:\Users\Administrator\Documents\GitHub\DataHandlers')
 # End Notebook version only
 
 from ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
@@ -14,26 +14,24 @@ from LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-raw = pd.read_csv(r'Indium-VR_JGW-A-43.csv')
-mass = 5.491 #in mg
+raw = pd.read_csv(r'1,6-diisocyanohexane.urea-VR_JGW-A-50.csv')
+mass = 31.29 #in mg
 Therm_Resist = 0.49441 #in K/mW
 
-beta_choose = 10
+beta_choose = 75
 T_Arrhenius = 200
 tolerance_frac = 0.005
 # --------------------------------------------------------------------------------------------
-# low_rates = raw.iloc[0:6, :]
-# df = PeakTempCorrection(low_rates, Therm_Resist, mass)
 
 #Import and fit
-df = PeakTempCorrection(raw, Therm_Resist, mass)
+df = PeakTempCorrection(raw.iloc[:,0:3], Therm_Resist, mass)
 Rate_Corr = PolyReg(df['Heat Rate'], df['Lag Corr. ΔT'], 1)
 # Rate_Corr.report()
 
 R = physical_constants['molar gas constant'][0]
 logHeatRate_vs_Tinv = PolyReg(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'], 1)
 Ea = -2.19 * R * logHeatRate_vs_Tinv.coef[0]
-
+print(Ea)
 # Refine Ea
 # T_chosen is the Corr. Peak Temp (K) at beta_choose
 T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Lag Corr. Temp (K)']
@@ -47,53 +45,18 @@ k = get_k(ref_Ea, Z, T_Arrhenius)
 report = pd.Series({'Ea': ref_Ea, 'Z': Z, 'k': k})
 print(report)
 
-# FWO Plot
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
 ax.set_xlabel('1/T (K$^{-1}$)')
-ax.set_title(r"Indium Melt")
+ax.set_title(r"1,6-diisocyanohexane/urea Guest Jump")
 ax.annotate('R$^2$ = ' + str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
             xycoords=ax.transAxes,
             size=20)
 ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
                logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
                logHeatRate_vs_Tinv.coef[1], color='red')
-plt.grid()
-
-# Is the example data more linear than mine?
-y, x = df['Lag Corr. Temp (K)'], df['Heat Rate']
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(111)
-ax2.scatter(x, y)
-ax2.set_ylabel('Peak Temperature (K)')
-ax2.set_xlabel('β (K/min)')
-ax2.set_title(r"Indium Melt")
-
-# T_v_beta = PolyReg(x, y, 1)
-# ax3 = plt.plot(x, T_v_beta.coef[0]*x + T_v_beta.coef[1], color='r')
 
 plt.grid()
 plt.show()
-
-# Depreciated Heat Rate correction Plotting
-# fig, ax1 = plt.subplots()
-# ax1.scatter(df['Heat Rate'], df['Lag Corr. ΔT'], c='black', zorder=0.1)
-# ax1.set_ylabel('Lag Corrected ΔT (K)')
-# ax1.set_xlabel('Heating Rate (K/min)')
-# ax2 = plt.plot(df['Heat Rate'], df['Heat Rate'] * Rate_Corr.coef[0] + Rate_Corr.coef[1])
-#
-# # # Does the Lag Correction affect linearity?
-# # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
-# # ax3 = ax1.twiny()
-# # ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
-
-
-
-# # Try Kissinger Equation
-# df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Lag Corr. Temp (K)']**2)
-# k_fig, k_ax = plt.subplots()
-# k_ax.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'], c='black')
-# k_ax.set_ylabel('ln(Heat Rate/Tm2)')
-# k_ax.set_xlabel('1/T')

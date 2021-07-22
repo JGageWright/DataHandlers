@@ -38,27 +38,27 @@ k = get_k(ref_Ea, Z, T_Arrhenius)
 report = pd.Series({'Ea':ref_Ea, 'Z':Z, 'k':k})
 print(report)
 
-x, y = 1/df['Corr. Peak Temp (K)'], df['log10(Heat Rate)']
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.scatter(x, y)
-ax.set_ylabel(r'log$_{10}$(β)')
-ax.set_xlabel('1/T (K$^{-1}$)')
-ax.set_title(r"Example Data")
-ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
-            xycoords=ax.transAxes,
-            size=20)
-ax3 = plt.plot(x, logHeatRate_vs_Tinv.coef[0]*x + logHeatRate_vs_Tinv.coef[1], color='red')
+# x, y = 1/df['Corr. Peak Temp (K)'], df['log10(Heat Rate)']
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# ax.scatter(x, y)
+# ax.set_ylabel(r'log$_{10}$(β)')
+# ax.set_xlabel('1/T (K$^{-1}$)')
+# ax.set_title(r"Example Data")
+# ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
+#             xycoords=ax.transAxes,
+#             size=20)
+# ax3 = plt.plot(x, logHeatRate_vs_Tinv.coef[0]*x + logHeatRate_vs_Tinv.coef[1], color='red')
 
-# y, x = df['Corr. Peak Temp (K)'], df['Heat Rate']
-# fig2 = plt.figure(figsize=(16,9))
-# ax2 = fig2.add_subplot(111)
-# ax2.scatter(x, y)
-# ax2.set_ylabel('Peak Temperature (K)')
-# ax2.set_xlabel('β (K/min)')
-# ax2.set_title(r"Example Data")
-#
-# T_v_beta = PolyReg(x, y, 1)
+y, x = df['Corr. Peak Temp (K)'], df['Heat Rate']
+fig2 = plt.figure(figsize=(16,9))
+ax2 = fig2.add_subplot(111)
+ax2.scatter(x, y)
+ax2.set_ylabel('Peak Temperature (K)')
+ax2.set_xlabel('β (K/min)')
+ax2.set_title(r"Example Data")
+
+T_v_beta = PolyReg(x, y, 1)
 
 
 plt.grid()
