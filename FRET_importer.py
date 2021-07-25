@@ -8,7 +8,7 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from tkinter import filedialog, messagebox
 import tkinter as tk
-from importer_snippets import episodic_to_dataframe, get_times, convert_times, get_folders
+from importer_snippets_2020 import episodic_to_dataframe, get_times, convert_times, get_folders
 
 # root = tk.Tk()
 # root.withdraw()

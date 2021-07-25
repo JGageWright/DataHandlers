@@ -9,8 +9,8 @@ plt.style.use('..\JGW.mplstyle')
 # os.chdir(r'C:\Users\Administrator\Documents\GitHub\DataHandlers\notebooks')
 # End Notebook version only
 
-from ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
-from LinReg import PolyReg
+from DataHandlers.ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
+from DataHandlers.LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
@@ -52,9 +52,9 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
-ax.set_xlabel('1/T (K$^{-1}$)')
+ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 ax.set_title(r"Indium Melt")
-ax.annotate('R$^2$ = ' + str(round(logHeatRate_vs_Tinv.r_squared,4)), (.73, .85),
+ax.annotate('R$^2$ = ' + str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
             xycoords=ax.transAxes,
             size=20)
 ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
@@ -62,17 +62,28 @@ ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
                logHeatRate_vs_Tinv.coef[1], color='red')
 plt.grid()
 
-# Is the example data more linear than mine?
-y, x = df['Lag Corr. Temp (K)'], df['Heat Rate']
+# Peak Temperature vs. Heating Rate
+beta, temp = df['Heat Rate'], df['Lag Corr. Temp (K)']
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(111)
-ax2.scatter(x, y)
-ax2.set_ylabel('Peak Temperature (K)')
+ax2.scatter(beta, temp)
+ax2.set_ylabel('T$_{m}$ (K)')
 ax2.set_xlabel('β (K/min)')
 ax2.set_title(r"Indium Melt")
+plt.grid()
+# T_v_beta = PolyReg(beta, temp, 1)
+# ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
 
-# T_v_beta = PolyReg(x, y, 1)
-# ax3 = plt.plot(x, T_v_beta.coef[0]*x + T_v_beta.coef[1], color='r')
+
+
+# Kissinger
+df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Lag Corr. Temp (K)']**2)
+k_fig = plt.figure()
+k_ax = k_fig.add_subplot()
+k_ax.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'])
+k_ax.set_ylabel('ln(β/T$_{m}^{2}$)')
+k_ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
+k_ax.set_title(r"Indium Melt")
 
 plt.grid()
 plt.show()
@@ -88,12 +99,3 @@ plt.show()
 # # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
 # # ax3 = ax1.twiny()
 # # ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
-
-
-
-# # Try Kissinger Equation
-# df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Lag Corr. Temp (K)']**2)
-# k_fig, k_ax = plt.subplots()
-# k_ax.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'], c='black')
-# k_ax.set_ylabel('ln(Heat Rate/Tm2)')
-# k_ax.set_xlabel('1/T')

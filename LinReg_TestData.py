@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
 import scipy.stats as stats
-from importer_snippets import make_ELISA_dataframe
+from importer_snippets_2020 import make_ELISA_dataframe
 import LinReg
 import statsmodels.api as sm
 
