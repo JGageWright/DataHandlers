@@ -88,14 +88,20 @@ k_ax.set_title(r"Indium Melt")
 plt.grid()
 plt.show()
 
-# Depreciated Heat Rate correction Plotting
-# fig, ax1 = plt.subplots()
-# ax1.scatter(df['Heat Rate'], df['Lag Corr. ΔT'], c='black', zorder=0.1)
-# ax1.set_ylabel('Lag Corrected ΔT (K)')
-# ax1.set_xlabel('Heating Rate (K/min)')
-# ax2 = plt.plot(df['Heat Rate'], df['Heat Rate'] * Rate_Corr.coef[0] + Rate_Corr.coef[1])
-#
-# # # Does the Lag Correction affect linearity?
-# # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
-# # ax3 = ax1.twiny()
-# # ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
+# Heat Rate correction Plotting
+fig, ax4 = plt.subplots()
+ax4.scatter(df['Heat Rate'], df['Lag Corr. Temp (K)'])
+ax4.set_ylabel('T$_{m}$ (K)')
+ax4.set_xlabel('β (K/min)')
+ax4.set_title(r"Indium Melt")
+ax5 = plt.scatter(df['Heat Rate'], df['Peak Temp (C)'] + 273.15, c='r')
+
+ax4.legend(['Lag Corrected T$_{m}$', 'Uncorrected T$_{m}$'])
+
+plt.grid()
+plt.show()
+
+# # Does the Lag Correction affect linearity?
+# x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
+# ax3 = ax1.twiny()
+# ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
