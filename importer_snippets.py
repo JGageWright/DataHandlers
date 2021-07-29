@@ -22,6 +22,18 @@ def df_to_excel(df, sheet_name='Sheet1'):
     with pd.ExcelWriter(save_name) as writer:
         df.to_excel(writer, engine='openpyxl', sheet_name=sheet_name)
 
+def cary630(filename):
+    '''
+    Given path, shapes .CSV data output by
+    Aligent's Cary 630 Spectrometer (managed by MicroLab)
+    to a usable dataframe with integer index
+    '''
+    df = pd.read_csv(filename,
+                       header=4,
+                       names=['Wavenumber', 'Absorbance'])
+    return df
+
+
 # Testing df
 # df = pd.DataFrame({
 #     1: ['one', 'four', 'seven'],
