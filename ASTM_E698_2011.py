@@ -15,10 +15,9 @@ def PeakTempCorrection(df, R0=0.49441, m=1):
 
     df.columns = ['Heat Rate', 'Peak Temp (C)', 'Peak Height (W/g)']
     df['log10(Heat Rate)'] = np.log10(df.iloc[:, 0])
-    df['Height (mW)'] = df.iloc[:, 2] * m / 1000
-    df['Lag Corr. Temp (C)'] = df.iloc[:, 1] - (df['Height (mW)'] * R0)
+    df['Peak Height (mW)'] = df.iloc[:, 2] * m / 1000
+    df['Lag Corr. Temp (C)'] = df.iloc[:, 1] - (df['Peak Height (mW)'] * R0)
     df['Lag Corr. Temp (K)'] = df['Lag Corr. Temp (C)'] + 273.15
-    df['Lag Corr. ΔT'] = df['Lag Corr. Temp (C)'] - df.loc[df.iloc[:, 0] == 10, 'Lag Corr. Temp (C)'].array
     return df
 
 def get_D(X):
