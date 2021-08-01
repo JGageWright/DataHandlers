@@ -9,7 +9,6 @@ from DataHandlers.LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-# raw = pd.read_csv(r'C:\Users\Administrator\Documents\GitHub\DataHandlers\notebooks\1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
 raw = pd.read_csv(r'1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
 mass = 9.620 #in mg
 Therm_Resist = 0.49441 #in K/mW
@@ -22,18 +21,20 @@ T_Arrhenius = 200
 
 #Import and fit
 df = PeakTempCorrection(raw, Therm_Resist, mass)
-Indium_Standard = pd.read_excel(r'../data/Indium-Standard_JGW-A-43-15.xlsx', converters={'Heat Rate': int})
+Standard = pd.read_excel(r'../data/Indium-Standard_JGW-A-43-15.xlsx')
 
 
-# Drop any values not present in unknown and standard
+# Compute Heat Rate Corrected peak temperatures using values from Standard
 for beta in df['Heat Rate'].values:
-    # .values is necessary because pd will actually test the indicies otherwise. Exceptionally silly behavior if you ask me.
-    if beta in Indium_Standard['Heat Rate'].values:
+    # .values is necessary because pd will actually test the indicies otherwise.
+    # Exceptionally silly behavior if you ask me.
+    if beta in Standard['Heat Rate'].values:
         df.loc[df['Heat Rate'] == beta, 'Twice Corr. Temp (K)'] \
             = df.loc[df['Heat Rate'] == beta, 'Lag Corr. Temp (K)'].values \
-            - Indium_Standard.loc[Indium_Standard['Heat Rate'] == beta, 'Heat Rate Corr. ΔT'].values
-            # .values necessary here too, otherwise some calculations return NaN ??
+              - Standard.loc[Standard['Heat Rate'] == beta, 'Heat Rate Corr. ΔT'].values
+            # .values is necessary here too, otherwise some perfectly valid calculations return NaN ??
 
+# Drop any values not present in unknown AND standard
 nonexistent = df.index[df.isnull().any(axis=1)]
 df.drop(nonexistent, inplace=True)
 print(df)

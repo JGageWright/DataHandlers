@@ -84,17 +84,6 @@ k_ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 k_ax.set_title(r"Indium Melt")
 plt.grid()
 
-# Heat Rate correction Plotting
-fig, ax4 = plt.subplots()
-ax4.scatter(df['Heat Rate'], df['Lag Corr. Temp (K)'])
-ax4.set_ylabel('T$_{m}$ (K)')
-ax4.set_xlabel('β (K/min)')
-ax4.set_title(r"Indium Melt")
-ax5 = plt.scatter(df['Heat Rate'], df['Peak Temp (C)'] + 273.15, c='r')
-
-ax4.legend(['Lag Corrected T$_{m}$', 'Uncorrected T$_{m}$'])
-
-plt.grid()
 
 # # Does the Lag Correction affect linearity?
 # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
@@ -104,14 +93,25 @@ plt.grid()
 
 # Compute ΔT for each β that adjusts each peak temp to that of β = 10 K/min
 df['Heat Rate Corr. ΔT'] = df['Lag Corr. Temp (K)'] - df.loc[df.iloc[:, 0] == 10, 'Lag Corr. Temp (K)'].array
+df['HRCwoLag'] = df['Peak Temp (C)'] - df.loc[df.iloc[:, 0] == 10, 'Peak Temp (C)'].array
+
+# Heat Rate correction Plotting
+fig, ax4 = plt.subplots()
+ax4.scatter(df['Heat Rate'], df['Heat Rate Corr. ΔT'])
+ax4.set_ylabel('ΔT (K)')
+ax4.set_xlabel('β (K/min)')
+ax4.set_title(r"Heating Rate Correction (to subtract)")
+ax5 = plt.scatter(df['Heat Rate'], df['HRCwoLag'], c='r')
+
+ax4.legend(['Calculated from Lag Corrected Data', 'Calculated from Raw Data'])
 
 # # It's flat
 # plt.close('all')
 # wig = plt.figure()
 # wax = wig.add_subplot()
 # wax.scatter(df['Heat Rate'], df['Heat Rate Corr. ΔT'])
-# plt.grid()
-# plt.show()
+plt.grid()
+plt.show()
 
-df_to_excel(df.drop(df.columns[4:6], axis=1), sheet_name='JGW-A-43-15')
-# df_to_excel(df, sheet_name='JGW-A-43-15')
+# df_to_excel(df.drop(df.columns[4:6], axis=1), sheet_name='JGW-A-43-15')
+# # df_to_excel(df, sheet_name='JGW-A-43-15')
