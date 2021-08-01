@@ -14,7 +14,7 @@ raw = pd.read_csv(r'1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
 mass = 9.620 #in mg
 Therm_Resist = 0.49441 #in K/mW
 
-beta_choose = 75
+beta_choose = 20
 tolerance_frac = 0.005
 T_Arrhenius = 200
 # --------------------------------------------------------------------------------------------
@@ -22,16 +22,29 @@ T_Arrhenius = 200
 
 #Import and fit
 df = PeakTempCorrection(raw, Therm_Resist, mass)
-Rate_Corr = PolyReg(df['Heat Rate'], df['Lag Corr. ΔT'], 1)
-# Rate_Corr.report()
+Indium_Standard = pd.read_excel(r'../data/Indium-Standard_JGW-A-43-15.xlsx', converters={'Heat Rate': int})
+
+
+# Drop any values not present in unknown and standard
+for beta in df['Heat Rate'].values:
+    # .values is necessary because pd will actually test the indicies otherwise. Exceptionally silly behavior if you ask me.
+    if beta in Indium_Standard['Heat Rate'].values:
+        df.loc[df['Heat Rate'] == beta, 'Twice Corr. Temp (K)'] \
+            = df.loc[df['Heat Rate'] == beta, 'Lag Corr. Temp (K)'].values \
+            - Indium_Standard.loc[Indium_Standard['Heat Rate'] == beta, 'Heat Rate Corr. ΔT'].values
+            # .values necessary here too, otherwise some calculations return NaN ??
+
+nonexistent = df.index[df.isnull().any(axis=1)]
+df.drop(nonexistent, inplace=True)
+print(df)
 
 R = physical_constants['molar gas constant'][0]
-logHeatRate_vs_Tinv = PolyReg(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'], 1)
+logHeatRate_vs_Tinv = PolyReg(1/df['Twice Corr. Temp (K)'], df['log10(Heat Rate)'], 1)
 Ea = -2.19 * R * logHeatRate_vs_Tinv.coef[0]
 
 # Refine Ea
 # T_chosen is the Corr. Peak Temp (K) at beta_choose
-T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Lag Corr. Temp (K)']
+T_chosen = df.loc[df['Heat Rate'] == beta_choose, 'Twice Corr. Temp (K)']
 ref_Ea = iter_refine(Ea,
                      logHeatRate_vs_Tinv.coef[0],
                      T_chosen,
@@ -45,7 +58,7 @@ print(report)
 # FWO plot
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'])
+ax.scatter(1/df['Twice Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
 ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
@@ -53,8 +66,8 @@ ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
             xycoords=ax.transAxes,
             size=20)
 
-ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
-               logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
+ax1 = plt.plot(1/df['Twice Corr. Temp (K)'],
+               logHeatRate_vs_Tinv.coef[0]*(1/df['Twice Corr. Temp (K)']) +
                logHeatRate_vs_Tinv.coef[1],
                color='red')
 plt.grid()
@@ -72,7 +85,7 @@ plt.grid()
 # ax3 = plt.scatter(x_unc, y_unc, c='red', zorder=1)
 
 # Peak Temperature vs. Heating Rate
-beta, temp = df['Heat Rate'], df['Lag Corr. Temp (K)']
+beta, temp = df['Heat Rate'], df['Twice Corr. Temp (K)']
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(111)
 ax2.scatter(beta, temp)
@@ -84,10 +97,10 @@ plt.grid()
 # ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
 
 # Kissinger
-df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Lag Corr. Temp (K)']**2)
+df['ln(Heat Rate/Tm2)'] = np.log(df['Heat Rate'] / df['Twice Corr. Temp (K)']**2)
 k_fig = plt.figure()
 k_ax = k_fig.add_subplot()
-k_ax.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'])
+k_ax.scatter(1/df['Twice Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'])
 k_ax.set_ylabel('ln(β/T$_{m}^{2}$)')
 k_ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 k_ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")

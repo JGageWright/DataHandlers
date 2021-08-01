@@ -113,5 +113,5 @@ df['Heat Rate Corr. ΔT'] = df['Lag Corr. Temp (K)'] - df.loc[df.iloc[:, 0] == 1
 # plt.grid()
 # plt.show()
 
-df_to_excel(df.drop(df.columns[4:6], axis=1))
+df_to_excel(df.drop(df.columns[4:6], axis=1), sheet_name='JGW-A-43-15')
 # df_to_excel(df, sheet_name='JGW-A-43-15')
