@@ -63,14 +63,17 @@ ax.scatter(1/df['Twice Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
 ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
-ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
-            xycoords=ax.transAxes,
-            size=20)
+# ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
+#             xycoords=ax.transAxes,
+#             size=20)
+#
+# ax1 = plt.plot(1/df['Twice Corr. Temp (K)'],
+#                logHeatRate_vs_Tinv.coef[0]*(1/df['Twice Corr. Temp (K)']) +
+#                logHeatRate_vs_Tinv.coef[1],
+#                color='red')
+ax23 = plt.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)']) # HRC
+ax.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$']) # HRC
 
-ax1 = plt.plot(1/df['Twice Corr. Temp (K)'],
-               logHeatRate_vs_Tinv.coef[0]*(1/df['Twice Corr. Temp (K)']) +
-               logHeatRate_vs_Tinv.coef[1],
-               color='red')
 plt.grid()
 
 # Heat Rate correction Plotting
@@ -93,6 +96,8 @@ ax2.scatter(beta, temp)
 ax2.set_ylabel('T$_{m}$ (K)')
 ax2.set_xlabel('β (K/min)')
 ax2.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
+ax22 = plt.scatter(beta, df['Lag Corr. Temp (K)'])
+ax2.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$'])
 plt.grid()
 # T_v_beta = PolyReg(beta, temp, 1)
 # ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
