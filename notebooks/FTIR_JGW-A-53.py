@@ -45,7 +45,30 @@ for ax in all_ax:
     ax.set_xlim(1760, 1700)
     ax.set_ylim(0, 2)
 
-fig, (ax1, ax2, ax3, ax4, ax5, ax6) = plt.subplots(6, 1, sharex=True)
-fig.set_size_inches(8.5, 11)
+fig, (ax1, ax2, ax3, ax4, ax5, ax6) = plt.subplots(6, 1, sharex='all', sharey='all')
+fig.set_size_inches(4, 40)
+
+ax1.plot(Hen_df['Wavenumber'], DAB_df['Absorbance'])
+ax1.set_title('1,4-diacetoxybutane/urea')
+
+ax2.plot(Hen_df['Wavenumber'], DAH_df['Absorbance'])
+ax2.set_title('1,6-diacetoxyhexane/urea')
+
+ax3.plot(Hen_df['Wavenumber'], DAO_df['Absorbance'])
+ax3.set_title('1,8-diacetoxyoctane/urea')
+
+ax4.plot(Hen_df['Wavenumber'], DAN_df['Absorbance'])
+ax4.set_title('1,9-diacetoxynonane/urea')
+
+ax5.plot(Hen_df['Wavenumber'], DAD_df['Absorbance'])
+ax5.set_title('1,10-diacetoxydecane/urea')
+
+ax6.plot(Hen_df['Wavenumber'], DADD_df['Absorbance'])
+ax6.set_title('1,12-diacetoxydodecane/urea')
+
+ax1.set_xlim(1760, 1700)
+ax1.set_ylim(0, 2)
+
+plt.subplots_adjust(wspace=10)
 
 plt.show()

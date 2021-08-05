@@ -14,7 +14,6 @@ def IR_abs_plot(df, title=None):
     ax = fig.add_subplot(111)
     ax.plot(x, y)
     ax.invert_xaxis()
-    plt.grid()
     ax.set_ylabel('Absorbance (a.u.)')
     ax.set_xlabel('Wavenumber (cm$^{-1}$)')
     ax.set_title(str(title))
