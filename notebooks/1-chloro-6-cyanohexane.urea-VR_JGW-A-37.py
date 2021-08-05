@@ -63,6 +63,7 @@ ax.scatter(1/df['Twice Corr. Temp (K)'], df['log10(Heat Rate)'])
 ax.set_ylabel(r'log$_{10}$(β)')
 ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
+# ax.set_title(r"Experimental Data")
 # ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
 #             xycoords=ax.transAxes,
 #             size=20)
@@ -96,6 +97,7 @@ ax2.scatter(beta, temp)
 ax2.set_ylabel('T$_{m}$ (K)')
 ax2.set_xlabel('β (K/min)')
 ax2.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
+# ax2.set_title(r"Experimental Data")
 ax22 = plt.scatter(beta, df['Lag Corr. Temp (K)'])
 ax2.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$'])
 plt.grid()
@@ -110,6 +112,10 @@ k_ax.scatter(1/df['Twice Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'])
 k_ax.set_ylabel('ln(β/T$_{m}^{2}$)')
 k_ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 k_ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
+
+k_ax2 = plt.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)']) # HRC
+k_ax.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$']) # HRC
+
 
 plt.grid()
 plt.show()
