@@ -18,7 +18,7 @@ DAD_df = importer_snippets.cary630(r'..\data\JGW-A-53\1,10-dad_jgw-a-53-19.csv')
 DADD_df = importer_snippets.cary630(r'..\data\JGW-A-53\1,12-dadd_jgw-a-53-24.csv')
 
 # Subtract the heneicosane/urea spectrum
-subtract = False
+subtract = True
 
 if subtract == True:
     DAB_df['Absorbance'] = DAB_df['Absorbance'] - Hen_df['Absorbance']
@@ -79,9 +79,10 @@ ax1.set_ylim(0, 2)
 
 
 
-fig.suptitle('Unsubtracted', size=24)
-fig.supylabel('Wavenumber (cm$^{-1}$)', size=16)
-fig.supxlabel('Absorbance (a.u.)', size=16)
+# fig.suptitle('Unsubtracted', size=24)
+fig.suptitle('Subtracted by Heneicosane/urea Spectrum', size=24)
+fig.supxlabel('Wavenumber (cm$^{-1}$)', size=16)
+fig.supylabel('Absorbance (a.u.)', size=16)
 plt.tight_layout()
 
 plt.show()
