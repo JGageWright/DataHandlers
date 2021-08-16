@@ -5,7 +5,7 @@ from scipy.constants import physical_constants
 import matplotlib.pyplot as plt
 plt.style.use('..\JGW.mplstyle')
 
-from DataHandlers.ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
+from DataHandlers.ASTM_E698_2011 import LagCorrection, iter_refine, get_Z, get_k
 from DataHandlers.LinReg import PolyReg
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ beta_choose = 7
 tolerance_frac = 0.005
 T_Arrhenius = 370
 # -----------------------------------------------------------------------------------------------------------------------
-df = pd.read_csv('ExampleData_ASTME698.csv')
+df = pd.read_csv('../data/VR-DSC/ExampleData_ASTME698.csv')
 df.columns = ['Heat Rate', 'Corr. Peak Temp (K)']
 df['log10(Heat Rate)'] = np.log10(df.iloc[:, 0])
 
@@ -50,8 +50,6 @@ ax.annotate('R$^2$ = '+ str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85),
             xycoords=ax.transAxes,
             size=20)
 ax3 = plt.plot(x, logHeatRate_vs_Tinv.coef[0]*x + logHeatRate_vs_Tinv.coef[1], color='red')
-plt.grid()
-
 
 # y, x = df['Corr. Peak Temp (K)'], df['Heat Rate']
 # fig2 = plt.figure(figsize=(16,9))
@@ -71,7 +69,6 @@ ax2.scatter(beta, temp)
 ax2.set_ylabel('T$_{m}$ (K)')
 ax2.set_xlabel('β (K/min)')
 ax2.set_title(r"Example Data (Table X2.1)")
-plt.grid()
 # T_v_beta = PolyReg(beta, temp, 1)
 # ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
 
@@ -92,5 +89,4 @@ k_ax.annotate('R$^2$ = '+ str("%.4f" % K_fit.r_squared), (.75, .85),
             xycoords=ax.transAxes,
             size=20)
 
-plt.grid()
 plt.show()

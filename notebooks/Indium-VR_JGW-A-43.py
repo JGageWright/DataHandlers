@@ -2,20 +2,20 @@ import pandas as pd
 import numpy as np
 from scipy.constants import physical_constants
 import matplotlib.pyplot as plt
-plt.style.use('..\JGW.mplstyle')
+plt.style.use('../JGW.mplstyle')
 
 # Notebook version only
 # import os
 # os.chdir(r'C:\Users\Administrator\Documents\GitHub\DataHandlers\notebooks')
 # End Notebook version only
 
-from DataHandlers.ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
+from DataHandlers.ASTM_E698_2011 import LagCorrection, iter_refine, get_Z, get_k
 from DataHandlers.LinReg import PolyReg
 from DataHandlers.importer_snippets import df_to_excel
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-raw = pd.read_csv(r'Indium-VR_JGW-A-43.csv')
+raw = pd.read_csv(r'../data/VR-DSC/Indium-VR_JGW-A-43.csv')
 mass = 5.491 #in mg
 Therm_Resist = 0.49441 #in K/mW
 
@@ -24,10 +24,10 @@ T_Arrhenius = 200
 tolerance_frac = 0.005
 # --------------------------------------------------------------------------------------------
 # low_rates = raw.iloc[0:6, :]
-# df = PeakTempCorrection(low_rates, Therm_Resist, mass)
+# df = LagCorrection(low_rates, Therm_Resist, mass)
 
 #Import and fit
-df = PeakTempCorrection(raw, Therm_Resist, mass)
+df = LagCorrection(raw, Therm_Resist, mass)
 
 R = physical_constants['molar gas constant'][0]
 logHeatRate_vs_Tinv = PolyReg(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)'], 1)
@@ -59,7 +59,6 @@ ax.annotate('R$^2$ = ' + str(round(logHeatRate_vs_Tinv.r_squared,4)), (.75, .85)
 ax1 = plt.plot(1/df['Lag Corr. Temp (K)'],
                logHeatRate_vs_Tinv.coef[0]*(1/df['Lag Corr. Temp (K)']) +
                logHeatRate_vs_Tinv.coef[1], color='red')
-plt.grid()
 
 # Peak Temperature vs. Heating Rate
 beta, temp = df['Heat Rate'], df['Lag Corr. Temp (K)']
@@ -69,7 +68,6 @@ ax2.scatter(beta, temp)
 ax2.set_ylabel('T$_{m}$ (K)')
 ax2.set_xlabel('β (K/min)')
 ax2.set_title(r"Indium Melt")
-plt.grid()
 # T_v_beta = PolyReg(beta, temp, 1)
 # ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
 
@@ -82,8 +80,6 @@ k_ax.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)'])
 k_ax.set_ylabel('ln(β/T$_{m}^{2}$)')
 k_ax.set_xlabel('1/T$_{m}$ (K$^{-1}$)')
 k_ax.set_title(r"Indium Melt")
-plt.grid()
-
 
 # # Does the Lag Correction affect linearity?
 # x_unc, y_unc = df['Heat Rate'], df['Peak Temp (C)'] - df.loc[df['Heat Rate']==10, 'Peak Temp (C)'].array
@@ -110,7 +106,6 @@ ax4.legend(['Calculated from Lag Corrected Data', 'Calculated from Raw Data'])
 # wig = plt.figure()
 # wax = wig.add_subplot()
 # wax.scatter(df['Heat Rate'], df['Heat Rate Corr. ΔT'])
-plt.grid()
 plt.show()
 
 # df_to_excel(df.drop(df.columns[4:6], axis=1), sheet_name='JGW-A-43-15')

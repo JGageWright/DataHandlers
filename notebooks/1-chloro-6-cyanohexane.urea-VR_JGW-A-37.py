@@ -2,14 +2,14 @@ import pandas as pd
 import numpy as np
 from scipy.constants import physical_constants
 import matplotlib.pyplot as plt
-plt.style.use('..\JGW.mplstyle')
+plt.style.use('../JGW.mplstyle')
 
-from DataHandlers.ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
+from DataHandlers.ASTM_E698_2011 import LagCorrection, iter_refine, get_Z, get_k
 from DataHandlers.LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-raw = pd.read_csv(r'1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
+raw = pd.read_csv(r'../data/VR-DSC/1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv')
 mass = 9.620 #in mg
 Therm_Resist = 0.49441 #in K/mW
 
@@ -20,8 +20,8 @@ T_Arrhenius = 200
 
 
 #Import and fit
-df = PeakTempCorrection(raw, Therm_Resist, mass)
-Standard = pd.read_excel(r'../data/Indium-Standard_JGW-A-43-15.xlsx')
+df = LagCorrection(raw, Therm_Resist, mass)
+Standard = pd.read_excel(r'../data/VR-DSC/Indium-Standard_JGW-A-43-15.xlsx')
 
 
 # Compute Heat Rate Corrected peak temperatures using values from Standard
@@ -75,8 +75,6 @@ ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
 ax23 = plt.scatter(1/df['Lag Corr. Temp (K)'], df['log10(Heat Rate)']) # HRC
 ax.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$']) # HRC
 
-plt.grid()
-
 # Heat Rate correction Plotting
 # fig, ax1 = plt.subplots()
 # ax1.scatter(df['Heat Rate'], df['Lag Corr. ΔT'], c='black', zorder=0.1)
@@ -100,7 +98,6 @@ ax2.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
 # ax2.set_title(r"Experimental Data")
 ax22 = plt.scatter(beta, df['Lag Corr. Temp (K)'])
 ax2.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$'])
-plt.grid()
 # T_v_beta = PolyReg(beta, temp, 1)
 # ax3 = plt.plot(beta, T_v_beta.coef[0]*beta + T_v_beta.coef[1], color='r')
 
@@ -116,6 +113,4 @@ k_ax.set_title(r"1-chloro-6-cyanohexane/urea Guest Jump")
 k_ax2 = plt.scatter(1/df['Lag Corr. Temp (K)'], df['ln(Heat Rate/Tm2)']) # HRC
 k_ax.legend(['Heat Rate and Lag Corrected T$_{m}$', 'Lag Corrected T$_{m}$']) # HRC
 
-
-plt.grid()
 plt.show()

@@ -9,12 +9,12 @@ plt.style.use('..\JGW.mplstyle')
 # os.chdir(r'C:\Users\Administrator\Documents\GitHub\DataHandlers')
 # End Notebook version only
 
-from DataHandlers.ASTM_E698_2011 import PeakTempCorrection, iter_refine, get_Z, get_k
+from DataHandlers.ASTM_E698_2011 import LagCorrection, iter_refine, get_Z, get_k
 from DataHandlers.LinReg import PolyReg
 
 # --------------------------------------------------------------------------------------------
 # USER DEFINED PARAMETERS
-raw = pd.read_csv(r'1-bromo-6-cyanohexane.urea-VR_JGW-A-47.csv')
+raw = pd.read_csv(r'../data/VR-DSC/1-bromo-6-cyanohexane.urea-VR_JGW-A-47.csv')
 mass = 6.48 #in mg
 Therm_Resist = 0.49441 #in K/mW
 
@@ -23,12 +23,11 @@ T_Arrhenius = 200
 tolerance_frac = 0.005
 # --------------------------------------------------------------------------------------------
 
-# Get rid of outliers
+# Get rid of outliers, see lab notebook
 raw.drop([0, 3, 12], axis=0, inplace=True)
 
-
 #Import and fit
-df = PeakTempCorrection(raw.iloc[:,0:3], Therm_Resist, mass)
+df = LagCorrection(raw.iloc[:, 0:3], Therm_Resist, mass)
 Rate_Corr = PolyReg(df['Heat Rate'], df['Lag Corr. ΔT'], 1)
 # Rate_Corr.report()
 

@@ -3,11 +3,11 @@ import numpy as np
 import sympy as sp
 from scipy.constants import physical_constants
 
-def PeakTempCorrection(df, R0=0.49441, m=1):
+def LagCorrection(df, R0=0.49441, m=1):
     '''
     df must have Heat Rate, Peak Temp, Peak Height (W/g) as first three columns.
 
-    ASTM E698-2011
+    Does Lag Correction from ASTM E698-2011 and adds useful columns to dataframe
     df is a dataframe of raw data, which has Heat Rate, Peak Temp (C), and Peak Height (W/g) columns
     R0 is the thermal resistance in K/mW
     m is the mass of the sample in mg
