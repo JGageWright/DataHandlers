@@ -3,7 +3,7 @@ import numpy as np
 from scipy.constants import physical_constants
 
 import matplotlib.pyplot as plt
-plt.style.use('..\JGW.mplstyle')
+plt.style.use('../JGW.mplstyle')
 
 from DataHandlers.ASTM_E698_2011 import LagCorrection, iter_refine, get_Z, get_k
 from DataHandlers.LinReg import PolyReg
