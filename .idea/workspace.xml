@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/data/Indium-Standard_JGW-A-43-15.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/1,6-diisocyanohexane.urea-VR_JGW-A-50.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/1,6-diisocyanohexane.urea-VR_JGW-A-50.py" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/1,6-diisocyanohexane.urea-VR_JGW-A-50.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/1-bromo-6-cyanohexane.urea-VR_JGW-A-47.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/1-chloro-6-cyanohexane.urea-VR_JGW-A-37.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/ExampleData_ASTME698.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/Indium-VR_JGW-A-43.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/Indium-VR_JGW-A-43.py" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/Indium-VR_JGW-A-43.py" afterDir="false" />
-    </list>
+    <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
