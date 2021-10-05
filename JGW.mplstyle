@@ -39,5 +39,6 @@ axes.grid : True
 axes.grid.axis : both
 
 savefig.bbox : tight
-savefig.pad_inches : 0.02
+savefig.pad_inches : 0.05
+
 
