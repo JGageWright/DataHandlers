@@ -12,7 +12,12 @@ class PolyReg:
     std_err = ndarray of standard errors of the fitting parameters in order of decreasing degree.
     These are calculated as the square root of diagonal elements in the covariance matrix
     """
-    def __init__(self, xdata, ydata, degree):
+    def __init__(self, xdata, ydata, degree: int):
+        """
+        :param xdata: Array of xdata
+        :param ydata: Array of ydata
+        :param degree: Degree of polynomial fit
+        """
         self.xdata = xdata
         self.ydata = ydata
         self.degree = degree
