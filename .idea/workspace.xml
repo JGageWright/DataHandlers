@@ -5,14 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/notebooks/FTACV-trial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Jupyter Notebook" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -27,6 +33,9 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/notebooks/1,6-diisocyanohexane.urea-VR_JGW-A-50.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="1wlpZJM0lvpYiZhGl6bcuVCtR1M" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -47,6 +56,11 @@
         <option name="mySdkHome" value="C:\Users\jgage\anaconda3\envs\DataHandlers\python.exe" />
       </console-settings>
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jgage\Documents\GitHub\DataHandlers\notebooks" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.FTACV-trial">
     <configuration name="1,6-diisocyanohexane.urea-VR_JGW-A-50" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
