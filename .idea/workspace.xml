@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/DataHandlers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DataHandlers.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JGW-PPT.mplstyle" beforeDir="false" afterPath="$PROJECT_DIR$/JGW-PPT.mplstyle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-3mm_JGW2-08.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control_JGW2-08.ipynb" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +52,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive - Stanford/Jaramillo Group/EC-data/Cracked-HOPG_JGW2-07" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -58,6 +63,9 @@
     </option>
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jgage\OneDrive - Stanford\Jaramillo Group\EC-data\Cracked-HOPG_JGW2-07" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\jgage\Documents\GitHub\DataHandlers\notebooks" />
     </key>
