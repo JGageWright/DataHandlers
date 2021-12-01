@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/DataHandlers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DataHandlers.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Control-Coplots_JGW2-09-30.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Control-Coplots_JGW2-09-31.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Control-1.5mm_JGW2-08.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-2mm_JGW2-09-17.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-2mm_JGW2-09-23.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JGW-PPT.mplstyle" beforeDir="false" afterPath="$PROJECT_DIR$/JGW-PPT.mplstyle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-3mm_JGW2-08.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control-Submerged_JGW2-08.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/GC-Control_JGW2-08.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/Coplots_JGW2-08.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Coplots_JGW2-08.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Control_JGW2-08.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-1.5mm_JGW2-09.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-1.5mm_JGW2-09.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-3mm_JGW2-09.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-3mm_JGW2-09.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,23 +39,23 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/notebooks/1,6-diisocyanohexane.urea-VR_JGW-A-50.py" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="1wlpZJM0lvpYiZhGl6bcuVCtR1M" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive - Stanford/Jaramillo Group/EC-data/Cracked-HOPG_JGW2-07" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/notebooks/JaramilloGroup" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -64,6 +67,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jgage\Documents\GitHub\DataHandlers\notebooks\JaramilloGroup" />
       <recent name="C:\Users\jgage\OneDrive - Stanford\Jaramillo Group\EC-data\Cracked-HOPG_JGW2-07" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -174,5 +178,8 @@
       <updated>1629043088956</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
