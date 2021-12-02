@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-hm_JGW2-10.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DataHandlers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DataHandlers.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/Protruding-GC_JGW2-12.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Protruding-GC_JGW2-12.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
