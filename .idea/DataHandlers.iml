@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="GC-Control-Submerged_JGW2-08" />
     <orderEntry type="module" module-name="Cracked-HOPG_JGW2-07" />
     <orderEntry type="module" module-name="EC-data" />
+    <orderEntry type="module" module-name="GitHub" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

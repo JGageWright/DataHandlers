@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b05ed62e-1ddc-455b-98af-45ff91fc4db9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Control-Coplots_JGW2-09-30.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Control-Coplots_JGW2-09-31.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Control-1.5mm_JGW2-08.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-2mm_JGW2-09-17.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-2mm_JGW2-09-23.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-hm_JGW2-10.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DataHandlers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DataHandlers.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/Coplots_JGW2-08.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/Coplots_JGW2-08.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Control_JGW2-08.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-1.5mm_JGW2-09.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-1.5mm_JGW2-09.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-3mm_JGW2-09.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/JaramilloGroup/GC-Variance-3mm_JGW2-09.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
