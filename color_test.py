@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-plt.style.use('JGW.mplstyle')
+import os
+os.system('cls')
+plt.style.use('DataHandlers/JGW-VS.mplstyle')
 
 x = np.linspace(0, 10, 100)
 
@@ -22,4 +24,4 @@ ax10 = plt.plot(x, np.sin(x + 10 * np.pi/6))
 
 ax0.set_title('Title')
 
-
+plt.show()
