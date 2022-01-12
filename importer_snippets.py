@@ -12,6 +12,7 @@ Tk.withdraw()
 def ask_path():
     return filedialog.asksaveasfile(mode='w').name
 
+
 def df_to_excel(df, sheet_name='Sheet1'):
     '''
     Uses pandas to always return a .xlsx file of the given df
@@ -25,6 +26,7 @@ def df_to_excel(df, sheet_name='Sheet1'):
     with pd.ExcelWriter(save_name) as writer:
         df.to_excel(writer, engine='openpyxl', sheet_name=sheet_name)
 
+
 def cary630(filename):
     '''
     Given path, shapes .CSV data output by
@@ -36,12 +38,13 @@ def cary630(filename):
                        names=['Wavenumber', 'Absorbance'])
     return df
 
+
 def load_experiment(filetype: str = '.csv', csv_dirname: str = None) -> experiment:
     '''
     :param filetype: .xlsx or .csv
     :return: experiment object
 
-    Creates and experiment object for a previously exported experiment.
+    Creates an experiment object for a previously exported experiment.
     If filetype = .xlsx, the excel file must have sheets named 'data' and 'params'
 
     If filetype = .csv, two CSVs in the selected folder must be named 'data' and 'params', respecitively
@@ -85,17 +88,25 @@ def load_experiment(filetype: str = '.csv', csv_dirname: str = None) -> experime
         exp = experiment(data, params, opt)
         return exp
 
-def biologic_mpt_voltammetry(filename: str) -> pd.DataFrame:
-    """
-    :param filename: Path to .mpt file
-    :return: dataframe of all data, sorted with relevant voltammetry columns first
 
-    No idea if this works on all .mpt files.
+def biologic_mpt(path: str, technique: str=None, area: float=None) -> pd.DataFrame:
+    """
+    Should work for all .mpt files, tested on CV, CVA, CA, PEIS, ZIR.
+    
     In principle, one function could be written with options to resort columns in various ways.
     impedance.py includes an impedance importer, so could use that one
+
+    Args:
+        path (str): Path to .mpt file
+        technique (str, optional): Technique type. Defaults to None.
+        area (float, optional): Electrode area for normalization in cm2. Defaults to None.
+
+    Returns:
+        pd.DataFrame: dataframe of all data, sorted with relevant columns first when applicable
     """
+    
     # .mpt has a variable number of header lines, but it tells you how many on line 2
-    with open(filename, 'r', encoding="latin-1") as input_file:
+    with open(path, 'r', encoding="latin-1") as input_file:
         lines = input_file.readlines()
 
     header_line = lines[1]
@@ -107,26 +118,27 @@ def biologic_mpt_voltammetry(filename: str) -> pd.DataFrame:
     df = pd.DataFrame(data={}, columns=headers)
     for i in range(len(data_lines)):
         df.loc[len(df)] = data_lines[i].split('\t')
-    aux_cols = df.columns.drop('Ewe/V').drop('<I>/mA').drop('time/s')
-    df = df.reindex(columns=['Ewe/V', '<I>/mA', 'time/s', *aux_cols])
-
+        
     # Convert text to numbers
     for col in df.columns:
         try:
             df[col] = pd.to_numeric(df[col])
         except:
             pass
-
-    # Be extra sure cycle number is an integer
-    df['cycle number'] = df['cycle number'].astype(np.int64)
-
+    
+    # Convert current to Amps (default mA) and compute current densities.
+    df['<I>/A'] = df['<I>/mA'] / 1000
+    
+    if area is not None:
+        df['j/A.cm-2'] = df['<I>/A'] / area
+        df['j/mA.cm-2'] = df['j/A.cm-2'] * 1000
+    
+    # Sort more relevant columns first
+    if technique in ['CVA', 'CV', 'CA']:
+        aux_cols = df.columns.drop('Ewe/V').drop('<I>/mA').drop('time/s').drop('j/mA.cm-2')
+        df = df.reindex(columns=['Ewe/V', '<I>/mA', 'j/mA.cm-2', 'time/s', *aux_cols])
+        
+        df['cycle number'] = df['cycle number'].astype(np.int64) # Be extra sure cycle number is an integer
+        
+        
     return df
-
-# Testing df
-# df = pd.DataFrame({
-#     1: ['one', 'four', 'seven'],
-#     2: ['two', 'five', 'eight'],
-#     3: ['three', 'six', 'nine']
-# }, index=[0, 1, 2])
-#
-# df_to_excel(df)
