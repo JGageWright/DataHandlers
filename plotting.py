@@ -52,10 +52,11 @@ def CHI_plot(df, technique, option=None):
         ax.set_xlabel('$E$ vs. RE / V')
         ax.set_ylabel('$i$ / mA')
         
-    elif technique.lower() in ['ocp', 'ocpt', 'open circuit potential - time']:
+    elif technique.lower() in ['ocp', 'ocpt', 'open circuit potential - time', 'multi-current steps', 'istep', 'cg']:
         fig, ax = plt.subplots()
-        ax.plot(df['Time/sec'] ,df['Potential/V'])
+        ax.plot(df['Time/sec'], df['Potential/V'])
         ax.set_ylabel('$t$ / s')
         ax.set_ylabel('$E$ vs. RE / V')
+        
         
     return fig, ax
