@@ -126,6 +126,7 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
     else:
         draw_legend = True
    
+   # Check if new fig, ax should be generated
     if ax is False or fig is False:
         if fig is not False or ax is not False:
             raise ValueError('supply CHI_coplot with fig and ax or neither')
@@ -134,8 +135,8 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
         else:
             fig, ax = plt.subplots()
             
+    # Do plotting
     for i, df, in enumerate(df_list):
-        
         if technique.lower() in ['a.c. impedance', 'imp', 'eis', 'peis']:
             if option != None and option.lower() == 'bode':
                 ax_isarray = True
@@ -160,7 +161,8 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
             ax.plot(df['Time/sec'], df['Potential/V'], label=labels[i])
             ax.set_ylabel('$t$ / s')
             ax.set_ylabel('$E$ vs. RE / V')
-         
+    
+    # Draw legend if possible
     if draw_legend is True:
         if order is not None and ax_isarray is False:
             handles, labels = plt.gca().get_legend_handles_labels()
@@ -172,5 +174,63 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
          
     return fig, ax
 
-def CHI_coplot_from_dict():
-    pass
+def CHI_coplot_from_dict(df_dict, technique, ax=False, fig=False, option=None, labels=None, order=None):
+    # Handle option defaults
+    ax_isarray = False
+    if order == None:
+        order = range(len(df_dict))
+    if labels == None:
+        labels = []
+        for i in range(len(df_dict)):
+            labels.append('_')
+        draw_legend = False
+    else:
+        draw_legend = True
+   
+   # Check if new fig, ax should be generated
+    if ax is False or fig is False:
+        if fig is not False or ax is not False:
+            raise ValueError('supply CHI_coplot with fig and ax or neither')
+        if option != None and option.lower() == 'bode':
+            fig, ax = plt.subplots(1, 2, figsize=(24, 8))
+        else:
+            fig, ax = plt.subplots()
+            
+    # Do plotting
+    for i, key, in enumerate([*df_dict]):
+        if technique.lower() in ['a.c. impedance', 'imp', 'eis', 'peis']:
+            if option != None and option.lower() == 'bode':
+                ax_isarray = True
+                ax[0].scatter(np.log10(df_dict[key]['Freq/Hz']), np.log10(df_dict[key]['Zmag/ohm']), label=labels[i])
+                ax[0].set_xlabel('log$_{10}(f)$')
+                ax[0].set_ylabel('log$_{10}|Z|$')
+                
+                ax[1].scatter(np.log10(df_dict[key]['Freq/Hz']), -df_dict[key]['Phase/deg'])
+                ax[1].set_xlabel('log$_{10}(f) $')
+                ax[1].set_ylabel('$-\phi$ / $\degree$')
+            else:
+                ax.plot(df_dict[key]['Zre/ohm'], -df_dict[key]['Zim/ohm'], label=labels[i])
+                ax.set_xlabel('$Z_{real}$ / $\Omega$')
+                ax.set_ylabel('$-Z_{imag}$ / $\Omega$')
+                
+        elif technique.lower() in ['cyclic voltammetry', 'linear sweep voltammetry', 'cv', 'lsv']:
+            ax.plot(df_dict[key]['Potential/V'], df_dict[key]['Current/A']*1000, label=labels[i])
+            ax.set_xlabel('$E$ vs. RE / V')
+            ax.set_ylabel('$i$ / mA')
+            
+        elif technique.lower() in ['ocp', 'ocpt', 'open circuit potential - time', 'multi-current steps', 'istep', 'cg']:
+            ax.plot(df_dict[key]['Time/sec'], df_dict[key]['Potential/V'], label=labels[i])
+            ax.set_ylabel('$t$ / s')
+            ax.set_ylabel('$E$ vs. RE / V')
+    
+    # Draw legend if possible
+    if draw_legend is True:
+        if order is not None and ax_isarray is False:
+            handles, labels = plt.gca().get_legend_handles_labels()
+            fig.legend([handles[idx] for idx in order],[labels[idx] for idx in order])
+        elif order is not None and ax_isarray is True:
+            raise TypeError('Arrays of axes cannot be reordered. Sorry :/')
+        else:
+            fig.legend()     
+         
+    return fig, ax
