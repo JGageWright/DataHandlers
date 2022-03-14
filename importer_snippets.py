@@ -183,3 +183,37 @@ def CHI_txt(path):
                    r"Z/ohm": 'Zmag/ohm'}, axis=1, inplace=True)
         df['Zcx/ohm'] = df['Zre/ohm'] + 1j*df['Zim/ohm']
     return df
+
+
+def CHI_txt_todict(path, dict):
+    
+    header = []
+    with open(path, 'r') as ff:
+        lines = ff.readlines()
+        # date = lines[0]
+        technique = lines[1].replace('\n', '')
+        i = 1
+        for line in lines[1:]: # First line always date with ,
+            if ',' not in line:
+                header.append(line)
+                if line != '\n': # readlines counts blank lines, but pandas does not.
+                    i += 1
+            else:
+                break
+    df = pd.read_csv(path, header=i)
+    df.columns = df.columns.str.replace(' ', '')
+    for col in df.columns:
+        try:
+            df[col] = pd.to_numeric(df[col])
+        except:
+            raise ValueError('Column could not be converted to numeric')
+    
+    
+    if technique == 'A.C. Impedance':
+        df.rename({r"Z'/ohm": 'Zre/ohm', 
+                   r'Z"/ohm': 'Zim/ohm',
+                   r"Z/ohm": 'Zmag/ohm'}, axis=1, inplace=True)
+        df['Zcx/ohm'] = df['Zre/ohm'] + 1j*df['Zim/ohm']
+    
+    dict[path] = df
+    return dict
