@@ -220,7 +220,7 @@ def CHI_coplot_from_dict(df_dict, technique, ax=False, fig=False, option=None, l
             
         elif technique.lower() in ['ocp', 'ocpt', 'open circuit potential - time', 'multi-current steps', 'istep', 'cg']:
             ax.plot(df_dict[key]['Time/sec'], df_dict[key]['Potential/V'], label=labels[i])
-            ax.set_ylabel('$t$ / s')
+            ax.set_xlabel('$t$ / s')
             ax.set_ylabel('$E$ vs. RE / V')
     
     # Draw legend if possible

@@ -186,7 +186,18 @@ def CHI_txt(path):
 
 
 def CHI_txt_todict(path, dict):
-    
+    """Converts CH Instuments .txt data into pandas Datarame and appends to passed dictionary
+
+    Args:
+        path (str): path to .txt file
+        dict (dict): dictionary to append df
+
+    Raises:
+        ValueError: ValueError: if data cannot be converted to a numerical datatype
+
+    Returns:
+        dict: Dictionary of dataframe with filepath keys. Dataframes contain all data after header
+    """
     header = []
     with open(path, 'r') as ff:
         lines = ff.readlines()
