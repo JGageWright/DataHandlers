@@ -81,15 +81,21 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas):
                 right_edge_idx = idx
                 break
         
+        # If the peak has no width, return integral of NaN, warn user, but don't exit the script
+        try:
+            # Set up arrays that only include the peaks
+            xpeak = xnew[left_edge_idx:right_edge_idx]
+            ypeak = ynew[left_edge_idx:right_edge_idx]
 
-        # Set up arrays that only include the peaks
-        xpeak = xnew[left_edge_idx:right_edge_idx]
-        ypeak = ynew[left_edge_idx:right_edge_idx]
-
-        # Set up baseline function as a straight line between the two peak edges
-        m = (ypeak[right_edge_idx - left_edge_idx - 1] - ypeak[0])/(xpeak[right_edge_idx - left_edge_idx - 1] - xpeak[0])
-        b = ypeak[0] - m * xpeak[0]
-        y_base = m * xpeak + b
+            # Set up baseline function as a straight line between the two peak edges
+            m = (ypeak[right_edge_idx - left_edge_idx - 1] - ypeak[0])/(xpeak[right_edge_idx - left_edge_idx - 1] - xpeak[0])
+            b = ypeak[0] - m * xpeak[0]
+            y_base = m * xpeak + b
+        except IndexError:
+            if left_edge_idx == right_edge_idx:
+                print('Left and right peak edges have the same index (the peak has no width)')
+            return np.NAN # Kill this function call if IndexError is raised, but continue script
+        
         plt.figure()
         plt.plot(xpeak, ypeak, xpeak, y_base, 'r')
         plt.legend(['Spline', 'Baseline'])
