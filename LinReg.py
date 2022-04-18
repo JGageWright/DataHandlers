@@ -79,10 +79,8 @@ class LinFixB:
         params = {}
         for i in range(len(self.coef)):
             params['coef_deg' + str(len(self.coef) - i -1)] = self.coef[i]
-            params['std_err_deg' + str(len(self.coef) - i -1)] = self.std_err[i]
             
         params['r_squared'] = self.r_squared
-        params['s_y'] = self.s_y
         series = pd.Series(params)
         return series
     
