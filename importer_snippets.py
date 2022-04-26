@@ -228,3 +228,33 @@ def CHI_txt_todict(path, dict):
     
     dict[path] = df
     return dict
+
+
+def Gamry_dta(file: str):
+    """Converts Gamry's .DTA file to usable format.
+
+    Args:
+        file (str): Path to .DTA file
+
+    Returns:
+        pd.DataFrame: data
+    """
+    # Get technique
+    with open(file, 'r') as opened_file:
+        lines = opened_file.readlines()
+        technique = lines[2].split('\t')[2]
+    
+        # Import data
+        if technique == 'Chronopotentiometry Scan':
+            pass
+        elif technique == 'Open Circuit Potential':
+            df = pd.read_csv(file, 
+                    delimiter='\t', 
+                    skiprows=47, 
+                    names=['empty', '', 'Time/sec', 'Vf', 'Vm', 'Arc', 'Over'], 
+                    index_col=0, 
+                    usecols=lambda x: x != 'empty',
+                    false_values=['...........']
+                    )
+            
+    return df
