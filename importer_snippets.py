@@ -263,7 +263,7 @@ def Gamry_dta(file: str):
             df = pd.read_csv(file, 
                     delimiter='\t', 
                     skiprows=58, 
-                    names=['empty', '', 'Time/sec', 'Vf', 'Im', 'Vu', 'Sig', 'Ach', 'IERange', 'Over'], 
+                    names=['empty', '', 'Time/sec', 'Potential/V', 'Current/A', 'Vu/V', 'Sig', 'Ach', 'IERange', 'Over'], 
                     index_col=0, 
                     usecols=lambda x: x != 'empty'
                     )
@@ -271,7 +271,7 @@ def Gamry_dta(file: str):
             df = pd.read_csv(file, 
                     delimiter='\t', 
                     skiprows=47, 
-                    names=['empty', '', 'Time/sec', 'Vf', 'Vm', 'Arc', 'Over'], 
+                    names=['empty', '', 'Time/sec', 'Potential/V', 'Vm/V', 'Ach', 'Over'], 
                     index_col=0, 
                     usecols=lambda x: x != 'empty'
                     )
