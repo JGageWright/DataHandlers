@@ -232,29 +232,49 @@ def CHI_txt_todict(path, dict):
 
 def Gamry_dta(file: str):
     """Converts Gamry's .DTA file to usable format.
+    
+    ------------Gamry's Notation-----------------
+    Gamry's Vf (filtered voltage) is the measured potential. 
+        If you select IR Compensation, the actual applied voltage between current interruptions is the sum of the Vf and Vu data.
+        
+        In Corrosion Potential measurements, or in the Open Circuit Voltage (OCV) measurement before an experiment, Vf is the filtered, measured, open-circuit voltage. 
+        A digital filter has been applied to minimize pickup of the AC mains frequency (50 or 60 Hz).
+        
+    Gamry's Vu is the uncompensated voltage, i.e. the voltage-drop across the solution resistance between the Working Electrode and the tip of the Reference Electrode.
+        If you select IR Compensation (current interrupt), Vu is the difference between the measured voltage with the current flowing, and the voltage during the period of the current interrupt. The actual applied voltage between current interruptions is the sum of the Vf and Vu data.
 
+    Gamry's Vm, where it appears, is included only for compatibility with older versions of the Gamry Framework Software.
+    ---------------------------------------------
     Args:
         file (str): Path to .DTA file
 
     Returns:
         pd.DataFrame: data
     """
-    # Get technique
+    
+    # Get technique. It sits in the third line of a .DTA file.
+    # The actual text that appears here may be mutable in the experimental setup, check that if you're getting errors.
     with open(file, 'r') as opened_file:
         lines = opened_file.readlines()
         technique = lines[2].split('\t')[2]
     
         # Import data
         if technique == 'Chronopotentiometry Scan':
-            pass
+            df = pd.read_csv(file, 
+                    delimiter='\t', 
+                    skiprows=58, 
+                    names=['empty', '', 'Time/sec', 'Vf', 'Im', 'Vu', 'Sig', 'Ach', 'IERange', 'Over'], 
+                    index_col=0, 
+                    usecols=lambda x: x != 'empty'
+                    )
         elif technique == 'Open Circuit Potential':
             df = pd.read_csv(file, 
                     delimiter='\t', 
                     skiprows=47, 
                     names=['empty', '', 'Time/sec', 'Vf', 'Vm', 'Arc', 'Over'], 
                     index_col=0, 
-                    usecols=lambda x: x != 'empty',
-                    false_values=['...........']
+                    usecols=lambda x: x != 'empty'
                     )
-            
+        del df['Over'] # get rid of this useless, unparsable shit
+        
     return df
