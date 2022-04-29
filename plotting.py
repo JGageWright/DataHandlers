@@ -159,7 +159,7 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
             
         elif technique.lower() in ['ocp', 'ocpt', 'open circuit potential - time', 'multi-current steps', 'istep', 'cg']:
             ax.plot(df['Time/sec'], df['Potential/V'], label=labels[i])
-            ax.set_ylabel('$t$ / s')
+            ax.set_xlabel('$t$ / s')
             ax.set_ylabel('$E$ vs. RE / V')
     
     # Draw legend if possible
