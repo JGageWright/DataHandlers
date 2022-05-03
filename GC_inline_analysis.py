@@ -303,4 +303,30 @@ def handle_GC_data(folderpath, overallleft, overallright,
         print(df.tail())
         
     return df
-        
+
+def plot_FE(df, current_mA=200):
+    """Plot H2 and C2H4 FE
+    Set for dark backdrop plot style
+
+    Args:
+        df (DataFrame): df returned by handle_GC_data
+        current_mA (int, optional): Current passed during step. Defaults to 200.
+    """
+    # CO calibrations March 2022
+    calibrations = {'C2H4': 0.0000293648779414082,
+                    'CH4': 0.00002859681879863,
+                    'H2': -0.000405038427942223,
+                    'CO': 0}
+    
+    for col in df:
+        df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
+
+    fig, ax = plt.subplots()
+    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c='w')
+    ax.plot((df.index - 1 )* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
+    ax.set_xlabel('$t$ / h')
+    ax.set_ylabel('Faradaic Efficiency / %')
+    ax.set_ylim(0, 100)
+    ax.legend()
+    
+    return fig, ax
