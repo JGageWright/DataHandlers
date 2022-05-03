@@ -311,6 +311,9 @@ def plot_FE(df, current_mA=200):
     Args:
         df (DataFrame): df returned by handle_GC_data
         current_mA (int, optional): Current passed during step. Defaults to 200.
+        
+    Returns:
+        fig, ax (tuple): fig and ax used for plotting
     """
     # CO calibrations March 2022
     calibrations = {'C2H4': 0.0000293648779414082,
