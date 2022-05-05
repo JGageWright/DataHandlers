@@ -321,8 +321,10 @@ def plot_FE(df, current_mA=200):
                     'H2': -0.000405038427942223,
                     'CO': 0}
     
-    for col in df:
-        df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
+    # Fix notebook cell rerunning key error
+    if 'H2 FE/%' not in list(df.columns):
+        for col in df:
+            df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
 
     fig, ax = plt.subplots()
     ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c='w')
