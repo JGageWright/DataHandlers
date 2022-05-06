@@ -21,7 +21,7 @@ boxplot.flierprops.color: white
 boxplot.flierprops.markeredgecolor: white
 boxplot.whiskerprops.color: white
 
-### Same size as PPT style
+### From JGW-PPT styles, but everything smaller for working plots
 figure.figsize : 6, 4 # Same aspect ratio
 
 # Set x axis
