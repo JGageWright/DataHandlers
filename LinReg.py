@@ -4,14 +4,14 @@ import pandas as pd
 
 class PolyReg:
     """
+    Uses sklear linear regression machinery, but has relevant callable attributes.
+    
     No parameters can be fixed
-    Object to hold all information associated with a polynomial model.
     Polynomial coefficients in order of decreasing degree are in coef[i].
-    Note that ss_yy is commonly named ss_tot in other implementations.
+    Note that ss_yy is commonly named ss_tot in other implementations. This is the total sum of squares.
     coef = ndarray of fitting parameters in order of decreasing degree
     ss_res = sum of squares of residuals.
-    std_err = ndarray of standard errors of the fitting parameters in order of decreasing degree.
-    These are calculated as the square root of diagonal elements in the covariance matrix
+    std_err = ndarray of standard errors of the fitting parameters in order of decreasing degree. These are calculated as the square root of diagonal elements in the covariance matrix.
     """
     def __init__(self, xdata, ydata, degree: int):
         """
@@ -52,6 +52,8 @@ class PolyReg:
     
     
 class LinFixB:
+    """Linear regression class similar to PolyReg, but with degree = 0 and the y-intercept (b) fixed at 0
+    """
     def __init__(self, xdata, ydata) -> None:
         self.xdata = xdata
         self.ydata = ydata
