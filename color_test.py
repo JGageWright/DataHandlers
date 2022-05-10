@@ -3,7 +3,10 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib.pyplot import cm
 os.system('cls')
-plt.style.use('DataHandlers/JGW-VS.mplstyle')
+# plt.style.use('DataHandlers/JGW-VS.mplstyle')
+# print(plt.style.available)
+plt.style.use('DataHandlers/JGW-PPT.mplstyle')
+# plt.style.use('JGW-VS-small')
 
 x = np.linspace(0, 10, 100)
 
@@ -27,6 +30,9 @@ for i in range(10):
 # ax10 = plt.plot(x, np.sin(x + 10 * np.pi/6))
 # # ax11 = plt.plot(x, np.sin(x + 11 * np.pi/6))
 
-# ax0.set_title('Title')
+ax0.set_title('Title')
+ax0.set_xlabel('xlabel')
+ax0.set_ylabel('ylabel')
+ax0.legend(title='title')
 
 plt.show()

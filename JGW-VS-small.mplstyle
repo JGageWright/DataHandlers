@@ -21,28 +21,28 @@ boxplot.flierprops.color: white
 boxplot.flierprops.markeredgecolor: white
 boxplot.whiskerprops.color: white
 
-### From JGW-PPT styles, but everything smaller for working plots
-figure.figsize : 6, 4 # Same aspect ratio
+
+figure.figsize : 8, 4 
 
 # Set x axis
-xtick.major.size : 6
+xtick.major.size : 3
 xtick.major.width : 1
-xtick.minor.size : 3
+xtick.minor.size : 2
 xtick.minor.width : 1
 
 # Set y axis
-ytick.major.size : 6
+ytick.major.size : 3
 ytick.major.width : 1
-ytick.minor.size : 3
+ytick.minor.size : 2
 ytick.minor.width : 1
 
 # Fontsizes
-xtick.labelsize : 22
-ytick.labelsize : 22
-legend.fontsize : 16
-legend.title_fontsize : 16
-axes.titlesize : 24
-axes.labelsize : 20
+xtick.labelsize : 14
+ytick.labelsize : 14
+legend.fontsize : 12
+legend.title_fontsize : 12
+axes.titlesize : 16
+axes.labelsize : 16
 
 # Errorbar Graphs
 errorbar.capsize : 3
