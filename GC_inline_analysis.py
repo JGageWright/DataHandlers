@@ -28,13 +28,13 @@ def plot_GC_data(filepath, line1, line2):
     # plt.savefig(filename + '.png', dpi=600)
     
 
-def integrate_peak(filepath, xleft, xright, thresh, smooth, gas):
+def integrate_peak(filepath, xleft, xright, thresh, smooth, gas, suppress_outputs: bool=False):
     
     with open(filepath, 'r') as f:
     # Define first and last lines to be read from ASC file. The data starts at line 25. 
         lines = f.readlines()[25:5424]
         
-        newlines=[]
+        newlines = []
         for line in lines:
             if line.strip() == '':
                 continue
@@ -66,7 +66,8 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas):
         y2der = interpolate.splev(xnew, tck, der=2)
         
         if np.amax(y2der) < thresh:
-            print('no peak')
+            if suppress_outputs is False:
+                print('no peak')
             return 0
 
         # Find the left edge of the peak, assuming edge of peak starts when 2nd der >= thresh
@@ -93,37 +94,42 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas):
             y_base = m * xpeak + b
         except IndexError:
             if left_edge_idx == right_edge_idx:
-                print('Left and right peak edges have the same index (the peak has no width)')
+                if suppress_outputs is False:
+                    print('Left and right peak edges have the same index (the peak has no width)')
             return np.NAN # Kill this function call if IndexError is raised, but continue script
         
-        plt.figure()
-        plt.plot(xpeak, ypeak, xpeak, y_base, 'r')
-        plt.legend(['Spline', 'Baseline'])
-        plt.title(gas +' Spline with Baseline')
-        # plt.savefig(gas + 'splinewithbaseline.png', dpi=600)
-        plt.show()
-
         # Subtract the baseline from the peak
         y_base_corr = []
         for y, z in zip(ypeak, y_base):
             y_bc = y - z
             y_base_corr.append(y_bc)
-        plt.figure()
-        plt.plot(xpeak, y_base_corr)
-        plt.title(gas + ' Baseline Corrected')
-        # plt.savefig(gas + 'baselinecorrected.png', dpi=600)
-        plt.show()
-
-        '''for idx, x, y in zip(range(0,len(xnew)), xnew, y2der):
-                    print(idx,x, y) '''      
-
+           
         # Integrate the Baseline Corrected peak
         integral = np.trapz(y_base_corr, dx=0.2)
-        print(integral)
+        
+        # Return plot outputs
+        if suppress_outputs is False:
+            plt.figure()
+            plt.plot(xpeak, ypeak, xpeak, y_base, 'r')
+            plt.legend(['Spline', 'Baseline'])
+            plt.title(gas +' Spline with Baseline')
+            # plt.savefig(gas + 'splinewithbaseline.png', dpi=600)
+            plt.show()
+
+            plt.figure()
+            plt.plot(xpeak, y_base_corr)
+            plt.title(gas + ' Baseline Corrected')
+            # plt.savefig(gas + 'baselinecorrected.png', dpi=600)
+            plt.show()
+
+            '''for idx, x, y in zip(range(0,len(xnew)), xnew, y2der):
+                        print(idx,x, y) '''      
+            print(integral)
+            
         return integral
 
 
-def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth):
+def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth, suppress_outputs: bool=False):
     
     with open(filepath, 'r') as f:
     # Define first and last lines to be read from ASC file. The data starts at line 25
@@ -157,7 +163,8 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth):
         y2der = interpolate.splev(xnew, tck, der=2)
         
         if np.amax(y2der) < thresh:
-            print('no peak')
+            if suppress_outputs is False:
+                print('no peak')
             return 0
 
         # Find the left edge of the peak, assuming edge of peak starts when 2nd der >= thresh
@@ -188,33 +195,36 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth):
             y_base = m * xpeak + b
         except IndexError:
             if left_edge_idx == right_edge_idx:
-                print('Left and right peak edges have the same index (the peak has no width)')
+                if suppress_outputs is False:
+                    print('Left and right peak edges have the same index (the peak has no width)')
             return np.NAN # Kill this function call if IndexError is raised, but continue script
-
-        plt.figure()
-        plt.plot(xpeak, ypeak, xpeak, y_base, 'r')
-        plt.legend(['Spline','Baseline'])
-        plt.title('H2 Spline with Baseline')
-        # plt.savefig('h2splinewithbaseline.png', dpi=600)
-        plt.show()
 
         # Subtract the baseline from the peak
         y_base_corr = []
         for y, z in zip(ypeak, y_base):
             y_bc = y - z
             y_base_corr.append(y_bc)
-        plt.figure()
-        plt.plot(xpeak, y_base_corr)
-        plt.title('H2 Baseline Corrected')
-        # plt.savefig('h2baselinecorrected.png', dpi=600)
-        plt.show()
-
-        '''for idx,x,y in zip(range(0,len(xnew)), xnew, y2der):
-                    print(idx, x, y) '''      
 
         # Integrate the Baseline Corrected peak
         integral = np.trapz(y_base_corr, dx=0.2)
-        print(integral)
+
+
+        if suppress_outputs is False:
+            plt.figure()
+            plt.plot(xpeak, ypeak, xpeak, y_base, 'r')
+            plt.legend(['Spline','Baseline'])
+            plt.title('H2 Spline with Baseline')
+            # plt.savefig('h2splinewithbaseline.png', dpi=600)
+            plt.show()
+
+            plt.figure()
+            plt.plot(xpeak, y_base_corr)
+            plt.title('H2 Baseline Corrected')
+            # plt.savefig('h2baselinecorrected.png', dpi=600)
+            plt.show()
+
+            print(integral)
+            
         return integral
     
     
@@ -235,10 +245,11 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth):
 # smooth=10
 
 def handle_GC_data(folderpath, overallleft, overallright, 
-                   COleft, COright, COthresh, 
+                   COleft, COright, COthresh,
                    CH4left, CH4right, CH4thresh,
                    C2H4left, C2H4right, C2H4thresh, 
-                   H2left, H2right, H2thresh, smooth):
+                   H2left, H2right, H2thresh, smooth,
+                   suppress_outputs: bool=False):
     
     # This glob.glob makes an array of all the file names with ASC. 
     filenames = glob.glob(folderpath + '/*.ASC')
@@ -262,45 +273,53 @@ def handle_GC_data(folderpath, overallleft, overallright,
             
             # Treat the FID Data First
             if 'FID' in filename:
-                    print(filename)
-                    plot_GC_data(filename, overallleft, overallright)
+                    if suppress_outputs is False:
+                        print(filename)
+                        plot_GC_data(filename, overallleft, overallright)
                     
                     # integrate CO peak. Typical peak on CO2 GC shows up between 175 and 235 seconds, and has a 
                     # second derivative threshold of 2500
-                    print('CO')
-                    CO_int = integrate_peak(filename, COleft, COright, COthresh, smooth, 'CO')
+                    if suppress_outputs is False:
+                        print('CO')
+                    CO_int = integrate_peak(filename, COleft, COright, COthresh, smooth, 'CO', suppress_outputs=suppress_outputs)
                     peak_dict[key]['CO'] = CO_int
 
                     # integrate CH4 peak. Typical peak on CO2 GC shows up between 240 and 300 seconds, and has a 
                     # second derivative threshold of 2500
-                    print('CH4')
-                    CH4_int = integrate_peak(filename, CH4left, CH4right, CH4thresh, smooth, 'CH4')
+                    if suppress_outputs is False:
+                        print('CH4')
+                    CH4_int = integrate_peak(filename, CH4left, CH4right, CH4thresh, smooth, 'CH4', suppress_outputs=suppress_outputs)
                     peak_dict[key]['CH4'] = CH4_int
 
                     # integrate C2H4 peak. Typical peak on CO2 GC shows up between 525 and 600 seconds, and has a 
                     # second derivative threshold of 2500
-                    print('C2H4')
-                    C2H4_int = integrate_peak(filename, C2H4left, C2H4right, C2H4thresh, smooth, 'C2H4')
+                    if suppress_outputs is False:
+                        print('C2H4')
+                    C2H4_int = integrate_peak(filename, C2H4left, C2H4right, C2H4thresh, smooth, 'C2H4', suppress_outputs=suppress_outputs)
                     peak_dict[key]['C2H4'] = C2H4_int
 
 
             # Treat the TCD Data Second
+            '''Integrate H2 peak. Typical peak shows up on CO2 GC between 150 and 230 seconds, and has a
+            second derivative threshold of -2500. 
+            ALSO CHANGED NEGATIVE SIGN IN FRONT OF H2_INT. 
+            Peak pointed up is between 320 and 360. Pretty confident that the peak below between
+            130 and 160 is the right one, it is the only one of the two that changes with increasing H2 
+            conc for the calibration'''
             if 'TCD' in filename: 
-                print(filename)
-                plot_GC_data(filename, overallleft, overallright)
-                '''Integrate H2 peak. Typical peak shows up on CO2 GC between 150 and 230 seconds, and has a
-                second derivative threshold of -2500. 
-                ALSO CHANGED NEGATIVE SIGN IN FRONT OF H2_INT. 
-                Peak pointed up is between 320 and 360. Pretty confident that the peak below between
-                130 and 160 is the right one, it is the only one of the two that changes with increasing H2 
-                conc for the calibration'''
-                print('H2')
-                H2_int = integrate_TCD_peak(filename, H2left, H2right, H2thresh, smooth)
+                if suppress_outputs is False:
+                    print(filename)
+                    plot_GC_data(filename, overallleft, overallright)
+                    print('H2')
+                H2_int = integrate_TCD_peak(filename, H2left, H2right, H2thresh, smooth, suppress_outputs=suppress_outputs)
                 peak_dict[key]['H2'] = - H2_int
 
         # print("Peak dict:\n", peak_dict)
         df = pd.DataFrame(peak_dict).T  # transpose
-        print(df.tail())
+        
+        # print recently computed peak table to user
+        if suppress_outputs is False:
+            print(df.tail())
         
     return df
 
@@ -327,7 +346,7 @@ def plot_FE(df, current_mA=200):
             df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
 
     fig, ax = plt.subplots()
-    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c='w')
+    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c='k')
     ax.plot((df.index - 1 )* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
     ax.set_xlabel('$t$ / h')
     ax.set_ylabel('Faradaic Efficiency / %')
