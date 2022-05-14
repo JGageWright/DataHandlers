@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import cmath
 
 def IR_abs_plot(df, title=None):
     '''
@@ -28,7 +29,7 @@ def CHI_plot(df, technique, option=None, label=None):
         option (str, optional): Options for different plots within a technique. Defaults to None.
 
     Returns:
-        tuple: fig, ax tuple
+        tuple: fig, ax 
     """
     if technique.lower() in ['a.c. impedance', 'imp', 'eis', 'peis']:
         if option != None and option.lower() == 'bode':
@@ -234,3 +235,38 @@ def CHI_coplot_from_dict(df_dict, technique, ax=False, fig=False, option=None, l
             fig.legend()     
          
     return fig, ax
+
+def plot_imp_py(df: pd.DataFrame, freq: np.ndarray, fit: np.ndarray):
+    """General quick plotting for circuits fit with impedance.py from data in standard format from CHI_txt() importing.
+
+    Args:
+        df (pd.DataFrame): EIS data imported like CHI_txt
+        fit (ndarray): impedance.py circuit.predict() output
+        freq (ndarray): frequencies used for fitting
+    
+    Returns:
+        tuple: fig, ax, fig, ndarray
+    """
+    fig_nyq, ax = plt.subplots()
+    ax.scatter(df['Zre/ohm'], -df['Zim/ohm'], c='C0', label='Data')
+    ax.plot(np.array([ele.real for ele in fit]), -np.array([ele.imag for ele in fit]), c='C1', label='Fit')
+
+    ax.set_xlabel('$Z_{real}$ / $\Omega$')
+    ax.set_ylabel('$-Z_{imaginary}$ / $\Omega$')
+
+    fig_bode, axs = plt.subplots(2)
+    axs[0].scatter(df['Freq/Hz'], df['Zmag/ohm'], label='Data', c='C0')
+    axs[0].plot(freq, [np.abs(ele) for  ele in fit], label='Fit', c='C1')
+
+    axs[0].set_xscale('log')
+    axs[0].set_xlabel('$f$ / Hz')
+    axs[0].set_ylabel('$Z_{mag}$ / $\Omega$')
+
+    axs[1].scatter(df['Freq/Hz'], -df['Phase/deg'], label='Data', c='C0')
+    axs[1].plot(freq, [-cmath.phase(ele)*180/np.pi for  ele in fit], label='Fit', c='C1')
+
+    axs[1].set_xscale('log')
+    axs[1].set_xlabel('$f$ / Hz')
+    axs[1].set_ylabel('$-\phi$ / $\circ$')
+    
+    return fig_nyq, ax, fig_bode, axs
