@@ -182,6 +182,7 @@ def CHI_txt(path):
                    r'Z"/ohm': 'Zim/ohm',
                    r"Z/ohm": 'Zmag/ohm'}, axis=1, inplace=True)
         df['Zcx/ohm'] = df['Zre/ohm'] + 1j*df['Zim/ohm']
+        df['Angular_Freq'] = df['Freq/Hz']*2*np.pi
     return df
 
 
