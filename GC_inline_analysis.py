@@ -257,15 +257,20 @@ def handle_GC_data(folderpath, overallleft, overallright,
     
     # Instantiate arrays that will contain the files from both detectors
     run = {}
-    # This only works for runs that have no more than 10 files. It doesn't work when D10 starts happening.
-    string_list = ['{0:02}'.format(i) for i in range(0,int(len(natsortedfilenames))+1)]
-    # print(string_list)
-    for number in range(1,int(len(natsortedfilenames)/2)+1):
+    
+    string_list = []
+    for filename in natsortedfilenames:
+        string_list.append(filename[-6:-4]) # Will throw error if file run number is > 99 (i.e. --D100)
+    
+    string_list = sorted(list(set(string_list))) # remove duplicates from finding TCD and FID run numbers
+    fire_numbers = sorted([int(i) for i in string_list])
+    # print(fire_numbers)
+    for idx, number in enumerate(fire_numbers):
         run[number] = []
         for filename in natsortedfilenames:
-            if 'D' + string_list[number] + '.ASC' in filename:
+            if 'D' + string_list[idx] + '.ASC' in filename:
                 run[number].append(filename)
-    # print(run)
+                
     peak_dict = {}
     for key in run:
         peak_dict[key] = {}
@@ -321,6 +326,7 @@ def handle_GC_data(folderpath, overallleft, overallright,
         if suppress_outputs is False:
             print(df.tail())
         
+    df.reset_index(drop=True, inplace=True) # index from 0
     return df
 
 def plot_FE(df, current_mA=200):
@@ -334,11 +340,13 @@ def plot_FE(df, current_mA=200):
     Returns:
         fig, ax (tuple): fig and ax used for plotting
     """
-    # CO calibrations March 2022
-    calibrations = {'C2H4': 0.0000293648779414082,
-                    'CH4': 0.00002859681879863,
-                    'H2': -0.000405038427942223,
-                    'CO': 0}
+    
+    # Calibrations March 2022
+    # Calibrations = mA per mL GC fire / peak area per mL GC fire
+    calibrations = {'C2H4': 57.7531642857143 / 2019566.04657302,
+                    'CH4': 4.16953035714286 / 141990.386115765,
+                    'H2': -14.1597480654762 / 34959.0238571043,
+                    'CO': 0 / 715060.1018}
     
     # Fix notebook cell rerunning key error
     if 'H2 FE/%' not in list(df.columns):
@@ -346,7 +354,12 @@ def plot_FE(df, current_mA=200):
             df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
 
     fig, ax = plt.subplots()
-    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c='k')
+    print(plt.rcParams['axes.facecolor'])
+    if plt.rcParams['axes.facecolor'] == 'black':
+        h2_color = 'w'
+    else:
+        h2_color = 'k'
+    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c=h2_color)
     ax.plot((df.index - 1 )* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
     ax.set_xlabel('$t$ / h')
     ax.set_ylabel('Faradaic Efficiency / %')
@@ -354,3 +367,21 @@ def plot_FE(df, current_mA=200):
     ax.legend()
     
     return fig, ax
+
+def GC_CO_SPC(df: pd.DataFrame, CO_flow_rate: float=1, total_flow_rate: float=20):
+    """Calculates CO Single Pass Conversion based on the CO peak in GC.
+
+    Args:
+        df (pd.DataFrame): df with column ['CO'] containing GC peak integrals for CO.
+        CO_flow_rate (float, optional): CO flow rate in sccm or mL/min. Defaults to 1.
+        total_flow_rate (float, optional): Total flow rate to GC in sccm or min. Defaults to 20.
+
+    Returns:
+        np.Series: Series of SPC values.
+    """
+    calibration = (5000 / 10e9 * 22.4 * total_flow_rate / 60)
+    CO_per_second = df['CO'] * calibration / 715060.1018
+    CO_flow_rate = CO_flow_rate / 1000 / 60 * 22.4 # convert mL/min to mol/s
+    
+    spc = 1 - (CO_per_second/(CO_flow_rate))
+    return spc
