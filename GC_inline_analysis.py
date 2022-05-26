@@ -5,22 +5,23 @@ import numpy as np
 import pandas as pd
 from natsort import natsorted
 
-def plot_GC_data(filepath, line1, line2):
+def plot_GC_data(filepath, line1):
     '''
-    Opens and plots GC data. This code throws out the first 25 lines of data, and goes until the last line of data
+    Opens and plots GC data. This code throws out the header of the ACS file and reads until the last line of data
     Using the 9 minute GC program. Splits lines by comma.
     '''
     with open(filepath,'r') as f: #open file
-        lines = f.readlines()[line1:line2] # make an array of lines that include data
+        lines = f.readlines()[line1:] # make an array of lines that include data
     yvalues = []
     for line in lines:
         if line.strip() == '':
             continue
         else:
             Type = line.split(",")
-            yval = int(Type[0]) # only considering first column of data, convert to int
+            yval = int(Type[0]) # only considering first column of data (Type[0] = Type[1]), convert to int
             yvalues.append(yval)
-    xvalues = np.linspace(0,540,540*5-1)
+    end_time = len(yvalues) / 5 #sampling rate is 5 / second
+    xvalues = np.linspace(0, end_time, len(yvalues))
     
     plt.plot(xvalues, yvalues)
     plt.xlabel("Retention time (seconds)")
@@ -28,11 +29,11 @@ def plot_GC_data(filepath, line1, line2):
     # plt.savefig(filename + '.png', dpi=600)
     
 
-def integrate_peak(filepath, xleft, xright, thresh, smooth, gas, suppress_outputs: bool=False):
+def integrate_peak(filepath, xleft, xright, data_start_line, thresh, smooth, gas, suppress_outputs: bool=False):
     
     with open(filepath, 'r') as f:
-    # Define first and last lines to be read from ASC file. The data starts at line 25. 
-        lines = f.readlines()[25:5424]
+    # Define first and last lines to be read from ASC file. The data starts at data_start_line. 
+        lines = f.readlines()[data_start_line:]
         
         newlines = []
         for line in lines:
@@ -40,9 +41,9 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas, suppress_output
                 continue
             else:
                 newlines.append(line)
-        # The step size is 0.2, so multiply the x position by 5 and add 25 to convert to line number
-        line1 = xleft*5 + 25
-        line2 = xright*5 + 25
+        # The step size is 0.2, so multiply the x position by 5 and add data_start_line to convert to line number
+        line1 = xleft * 5 + data_start_line
+        line2 = xright * 5 + data_start_line
         
         newlinesarray = newlines[line1:line2]
 
@@ -51,7 +52,7 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas, suppress_output
         yvalues = []
         for line in newlinesarray:
             Type = line.split(",")        
-            yval = int(Type[0])
+            yval = int(Type[0]) # only considering first column of data (Type[0] = Type[1]), convert to int
             xvalues = np.linspace(xleft, xright, (line2 - line1))
             yvalues.append(yval)
         
@@ -129,11 +130,11 @@ def integrate_peak(filepath, xleft, xright, thresh, smooth, gas, suppress_output
         return integral
 
 
-def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth, suppress_outputs: bool=False):
+def integrate_TCD_peak(filepath, xleft, xright, data_start_line, thresh, smooth, suppress_outputs: bool=False):
     
     with open(filepath, 'r') as f:
-    # Define first and last lines to be read from ASC file. The data starts at line 25
-        lines = f.readlines()[25:5424]
+    # Define first and last lines to be read from ASC file. The data starts at data_start_line
+        lines = f.readlines()[data_start_line:]
         newlines=[]
         for line in lines:
             if line.strip() == '':
@@ -141,9 +142,9 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth, suppress_outputs
             else:
                 newlines.append(line)
 
-    # The step size is 0.2, so multiply the x position by 5 and add 25 to convert to line number
-        line1 = xleft*5 + 25
-        line2 = xright*5 + 25
+    # The step size is 0.2, so multiply the x position by 5 and add data_start_line to convert to line number
+        line1 = xleft*5 + data_start_line
+        line2 = xright*5 + data_start_line
 
         newlinesarray = newlines[line1:line2]
         
@@ -168,13 +169,13 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth, suppress_outputs
             return 0
 
         # Find the left edge of the peak, assuming edge of peak starts when 2nd der >= thresh
-        for idx,x in zip(range(0,len(xnew)), xnew):
+        for idx, x in zip(range(0, len(xnew)), xnew):
             if y2der[idx] >= thresh:
                 left_edge_idx = idx
                 break
         
         # Find the right edge of the peak, assuming edge of peak starts when 2nd der >= thresh
-        for idx,x in zip(reversed(range(0,len(xnew))), xnew):
+        for idx, x in zip(reversed(range(0, len(xnew))), xnew):
             if y2der[idx] >= thresh:
                 right_edge_idx = idx
                 break
@@ -244,11 +245,12 @@ def integrate_TCD_peak(filepath, xleft, xright, thresh, smooth, suppress_outputs
 # H2thresh=-2500
 # smooth=10
 
-def handle_GC_data(folderpath, overallleft, overallright, 
+def handle_GC_data(folderpath,
                    COleft, COright, COthresh,
                    CH4left, CH4right, CH4thresh,
                    C2H4left, C2H4right, C2H4thresh, 
                    H2left, H2right, H2thresh, smooth,
+                   data_start_line: int=25,
                    suppress_outputs: bool=False):
     
     # This glob.glob makes an array of all the file names with ASC. 
@@ -280,27 +282,27 @@ def handle_GC_data(folderpath, overallleft, overallright,
             if 'FID' in filename:
                     if suppress_outputs is False:
                         print(filename)
-                        plot_GC_data(filename, overallleft, overallright)
+                        plot_GC_data(filename, data_start_line)
                     
                     # integrate CO peak. Typical peak on CO2 GC shows up between 175 and 235 seconds, and has a 
                     # second derivative threshold of 2500
                     if suppress_outputs is False:
                         print('CO')
-                    CO_int = integrate_peak(filename, COleft, COright, COthresh, smooth, 'CO', suppress_outputs=suppress_outputs)
+                    CO_int = integrate_peak(filename, COleft, COright, data_start_line, COthresh, smooth, 'CO', suppress_outputs=suppress_outputs)
                     peak_dict[key]['CO'] = CO_int
 
                     # integrate CH4 peak. Typical peak on CO2 GC shows up between 240 and 300 seconds, and has a 
                     # second derivative threshold of 2500
                     if suppress_outputs is False:
                         print('CH4')
-                    CH4_int = integrate_peak(filename, CH4left, CH4right, CH4thresh, smooth, 'CH4', suppress_outputs=suppress_outputs)
+                    CH4_int = integrate_peak(filename, CH4left, CH4right, data_start_line, CH4thresh, smooth, 'CH4', suppress_outputs=suppress_outputs)
                     peak_dict[key]['CH4'] = CH4_int
 
                     # integrate C2H4 peak. Typical peak on CO2 GC shows up between 525 and 600 seconds, and has a 
                     # second derivative threshold of 2500
                     if suppress_outputs is False:
                         print('C2H4')
-                    C2H4_int = integrate_peak(filename, C2H4left, C2H4right, C2H4thresh, smooth, 'C2H4', suppress_outputs=suppress_outputs)
+                    C2H4_int = integrate_peak(filename, C2H4left, C2H4right, data_start_line, C2H4thresh, smooth, 'C2H4', suppress_outputs=suppress_outputs)
                     peak_dict[key]['C2H4'] = C2H4_int
 
 
@@ -314,9 +316,9 @@ def handle_GC_data(folderpath, overallleft, overallright,
             if 'TCD' in filename: 
                 if suppress_outputs is False:
                     print(filename)
-                    plot_GC_data(filename, overallleft, overallright)
+                    plot_GC_data(filename, data_start_line)
                     print('H2')
-                H2_int = integrate_TCD_peak(filename, H2left, H2right, H2thresh, smooth, suppress_outputs=suppress_outputs)
+                H2_int = integrate_TCD_peak(filename, H2left, H2right, data_start_line, H2thresh, smooth, suppress_outputs=suppress_outputs)
                 peak_dict[key]['H2'] = - H2_int
 
         # print("Peak dict:\n", peak_dict)
@@ -354,7 +356,6 @@ def plot_FE(df, current_mA=200):
             df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
 
     fig, ax = plt.subplots()
-    print(plt.rcParams['axes.facecolor'])
     if plt.rcParams['axes.facecolor'] == 'black':
         h2_color = 'w'
     else:
@@ -379,9 +380,10 @@ def GC_CO_SPC(df: pd.DataFrame, CO_flow_rate: float=1, total_flow_rate: float=20
     Returns:
         np.Series: Series of SPC values.
     """
-    calibration = (5000 / 10e9 * 22.4 * total_flow_rate / 60)
-    CO_per_second = df['CO'] * calibration / 715060.1018
-    CO_flow_rate = CO_flow_rate / 1000 / 60 * 22.4 # convert mL/min to mol/s
     
-    spc = 1 - (CO_per_second/(CO_flow_rate))
+    calibration = (5000 / 10e9 / 22.4) / 715060.1018 # mol CO / min per unit integral
+    CO_per_fire = df['CO'] * calibration # mol CO / min
+    CO_to_GC = total_flow_rate / (1000 * 22.4) * (CO_flow_rate / total_flow_rate) # mol CO min at 0% conversion
+    
+    spc = 1 - (CO_per_fire/(CO_to_GC))
     return spc
