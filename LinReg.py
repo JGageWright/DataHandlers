@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.linalg import lstsq
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class PolyReg:
     """
@@ -88,3 +89,33 @@ class LinFixB:
     
     def eval(self, x):
         return np.polyval(self.coef, x)
+    
+    
+def linear_region(x, y, bounds: tuple=None, index=False):
+    """Fits specified region to a line and plots it over the data
+
+    Args:
+        x (array): x data
+        y (array): y data
+        bounds (tuple, optional): Bounds of region to fit in units of x or array indicies if index is True. Defaults to None.
+        index (bool, optional): If bounds should be read as array indicies. Defaults to False.
+
+    Returns:
+        tuple: LinReg.PolyReg object containing linear fit, figure, axes
+    """
+    if bounds != None:
+        if index is True:
+            bound_idx = bounds
+        elif index is False:
+            bound_idx = np.argmin(np.abs(x - bounds[0])), np.argmin(np.abs(x - bounds[1]))
+    elif bounds == None:
+        bound_idx = (0, len(x) - 1)
+    fit = PolyReg(x[bound_idx[0]:bound_idx[1]], y[bound_idx[0]:bound_idx[1]], 1)
+    
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, c='C0')
+    
+    x_space = np.linspace(x[bound_idx[0]], x[bound_idx[1]], 1000)
+    ax.plot(x_space, fit.eval(x_space), c='C1')
+    
+    return fit, fig, ax
