@@ -69,7 +69,7 @@ def integrate_peak(filepath, xleft, xright, data_start_line, thresh, smooth, gas
         if np.amax(y2der) < thresh:
             if suppress_outputs is False:
                 print('no peak')
-            return 0
+            return np.nan
 
         # Find the left edge of the peak, assuming edge of peak starts when 2nd der >= thresh
         for idx, x in zip(range(0,len(xnew)), xnew):
@@ -166,7 +166,7 @@ def integrate_TCD_peak(filepath, xleft, xright, data_start_line, thresh, smooth,
         if np.amax(y2der) < thresh:
             if suppress_outputs is False:
                 print('no peak')
-            return 0
+            return np.nan
 
         # Find the left edge of the peak, assuming edge of peak starts when 2nd der >= thresh
         for idx, x in zip(range(0, len(xnew)), xnew):
