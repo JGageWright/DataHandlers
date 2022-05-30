@@ -331,7 +331,7 @@ def handle_GC_data(folderpath,
     df.reset_index(drop=True, inplace=True) # index from 0
     return df
 
-def plot_FE(df, current_mA=200):
+def plot_FE(df, current_mA=200, methane: bool=True, total_gas: bool=True):
     """Plot H2 and C2H4 FE
     Set for dark backdrop plot style
 
@@ -362,6 +362,10 @@ def plot_FE(df, current_mA=200):
         h2_color = 'k'
     ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c=h2_color)
     ax.plot((df.index - 1 )* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
+    if methane is True:
+        ax.plot((df.index - 1) * .15, df['CH4 FE/%'], label='Methane', c='C1')
+    if total_gas is True:
+        ax.plot((df.index - 1) * .15, df['CH4 FE/%'] + df['C2H4 FE/%'] + df['H2 FE/%'], label='Total Gas', c='C2')
     ax.set_xlabel('$t$ / h')
     ax.set_ylabel('Faradaic Efficiency / %')
     ax.set_ylim(0, 100)
