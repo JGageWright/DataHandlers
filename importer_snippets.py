@@ -232,10 +232,11 @@ def CHI_txt_todict(path, dict):
     return dict
 
 
-def Gamry_dta(file: str):
+def Gamry_dta(file: str, line_offset: int=0):
     """Converts Gamry's .DTA file to usable format.
     
     ------------Gamry's Notation-----------------
+    
     Gamry's Vf (filtered voltage) is the measured potential. 
         If you select IR Compensation, the actual applied voltage between current interruptions is the sum of the Vf and Vu data.
         
@@ -246,9 +247,11 @@ def Gamry_dta(file: str):
         If you select IR Compensation (current interrupt), Vu is the difference between the measured voltage with the current flowing, and the voltage during the period of the current interrupt. The actual applied voltage between current interruptions is the sum of the Vf and Vu data.
 
     Gamry's Vm, where it appears, is included only for compatibility with older versions of the Gamry Framework Software.
+    
     ---------------------------------------------
     Args:
         file (str): Path to .DTA file
+        line_offset (int): Number of extra lines to skip. Negative number read earlier lines.
 
     Returns:
         pd.DataFrame: data
@@ -264,23 +267,23 @@ def Gamry_dta(file: str):
         if technique == 'Chronopotentiometry Scan':
             df = pd.read_csv(file, 
                     delimiter='\t', 
-                    skiprows=58, 
-                    names=['empty', '', 'Time/sec', 'Potential/V', 'Current/A', 'Vu/V', 'Sig', 'Ach', 'IERange', 'Over'], 
+                    skiprows=58 + line_offset, 
                     index_col=0, 
+                    names=['empty', '', 'Time/sec', 'Potential/V', 'Current/A', 'Vu/V', 'Sig', 'Ach', 'IERange', 'Over'], 
                     usecols=lambda x: x != 'empty'
                     )
         elif technique == 'Open Circuit Potential':
             df = pd.read_csv(file, 
                     delimiter='\t', 
-                    skiprows=47, 
-                    names=['empty', '', 'Time/sec', 'Potential/V', 'Vm/V', 'Ach', 'Over'], 
+                    skiprows=51 + line_offset, 
                     index_col=0, 
+                    names=['empty', '', 'Time/sec', 'Potential/V', 'Vm/V', 'Ach', 'Over', 'Temp/C'], 
                     usecols=lambda x: x != 'empty'
                     )
+            
         del df['Over'] # get rid of this useless, unparsable shit
         
     return df
-
 
 def Ecell_csv(file: str, offset=0):
     """Imports High-precision multimeter full cell data
