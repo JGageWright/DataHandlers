@@ -280,3 +280,22 @@ def Gamry_dta(file: str):
         del df['Over'] # get rid of this useless, unparsable shit
         
     return df
+
+
+def Ecell_csv(file: str, offset=0):
+    """Imports High-precision multimeter full cell data
+
+    Args:
+        file (str): filepath to cell voltage CSV
+        offset (int, optional): Number of seconds added to sync to proper time. Defaults to 0.
+
+    Returns:
+        pd.DataFrame: DataFrame with Ecell/V and Time/sec
+    """
+    df = pd.read_csv(file,
+                        names=['Ecell/V', 'datetime'], skiprows=[1], parse_dates=[1])
+    td = df['datetime'] - df['datetime'].iloc[0]
+    df['Time/sec'] = td.dt.total_seconds()
+    
+    df['Time/sec'] += offset
+    return df
