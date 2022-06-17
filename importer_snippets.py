@@ -259,21 +259,30 @@ def Gamry_dta(file: str, line_offset: int=0):
     
     # Get technique. It sits in the third line of a .DTA file.
     # The actual text that appears here may be mutable in the experimental setup, check that if you're getting errors.
-    with open(file, 'r') as opened_file:
+    with open(file, 'r', errors='replace') as opened_file:
         lines = opened_file.readlines()
         technique = lines[2].split('\t')[2]
     
-        # Import data
-        if technique == 'Chronopotentiometry Scan':
+    
+    # Import data
+    for alias in ['chronopotentiometry scan', 'istep', 'isteps', 'chronop']:
+        if alias in technique.lower():
             df = pd.read_csv(file, 
+                    encoding='unicode escape',
                     delimiter='\t', 
-                    skiprows=58 + line_offset, 
+                    skiprows=62 + line_offset, 
                     index_col=0, 
-                    names=['empty', '', 'Time/sec', 'Potential/V', 'Current/A', 'Vu/V', 'Sig', 'Ach', 'IERange', 'Over'], 
+                    names=['empty', '', 'Time/sec', 'Potential/V', 'Current/A', 'Vu/V', 'Sig', 'Ach', 'IERange', 'Over', 'Temp/C'], 
                     usecols=lambda x: x != 'empty'
                     )
-        elif technique == 'Open Circuit Potential':
+            
+            del df['Over'] # get rid of this useless, unparsable shit
+            return df
+        
+    for alias in ['open circuit potential', 'ocp', 'ocpt']:
+        if alias in technique.lower():
             df = pd.read_csv(file, 
+                    encoding='unicode escape',
                     delimiter='\t', 
                     skiprows=51 + line_offset, 
                     index_col=0, 
@@ -281,9 +290,26 @@ def Gamry_dta(file: str, line_offset: int=0):
                     usecols=lambda x: x != 'empty'
                     )
             
-        del df['Over'] # get rid of this useless, unparsable shit
-        
-    return df
+            del df['Over'] # get rid of this useless, unparsable shit
+            return df
+    
+    for alias in ['geis', 'eis']:
+        if alias in technique.lower():
+            df = pd.read_csv(file, 
+                    encoding='unicode escape',
+                    delimiter='\t', 
+                    skiprows=57 + line_offset, 
+                    index_col=0, 
+                    names=['empty', '', 'Time/sec', 'Freq/Hz', 'Zre/ohm', 'Zim/ohm', 'Zsig/V',
+                            'Zmag/ohm', 'Phase/deg', 'iDC/A', 'VDC/V', 'IERange'], 
+                    usecols=lambda x: x != 'empty'
+                    )
+            df['Zcx/ohm'] = df['Zre/ohm'] + 1j*df['Zim/ohm']
+            df['Angular_Freq'] = df['Freq/Hz']*2*np.pi
+            return df
+            
+    raise NameError(technique+' is not a recognized technique')
+
 
 def Ecell_csv(file: str, offset=0):
     """Imports High-precision multimeter full cell data
