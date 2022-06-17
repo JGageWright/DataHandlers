@@ -18,7 +18,7 @@ def plot_GC_data(filepath, line1):
             continue
         else:
             Type = line.split(",")
-            yval = int(Type[0]) # only considering first column of data (Type[0] = Type[1]), convert to int
+            yval = int(Type[1]) # only considering first column of data (Type[0] = Type[1]), convert to int
             yvalues.append(yval)
     end_time = len(yvalues) / 5 #sampling rate is 5 / second
     xvalues = np.linspace(0, end_time, len(yvalues))
@@ -52,7 +52,7 @@ def integrate_peak(filepath, xleft, xright, data_start_line, thresh, smooth, gas
         yvalues = []
         for line in newlinesarray:
             Type = line.split(",")        
-            yval = int(Type[0]) # only considering first column of data (Type[0] = Type[1]), convert to int
+            yval = int(Type[1]) # only considering first column of data (Type[0] = Type[1]), convert to int
             xvalues = np.linspace(xleft, xright, (line2 - line1))
             yvalues.append(yval)
         
@@ -332,10 +332,8 @@ def handle_GC_data(folderpath,
     return df
 
 def plot_FE(df, current_mA=200, methane: bool=True, total_gas: bool=True):
-    """Plot H2 and C2H4 FE
-    Set for dark backdrop plot style
-
-    Args:
+    """Plot Faradaic Effiencies
+        Args:
         df (DataFrame): df returned by handle_GC_data
         current_mA (int, optional): Current passed during step. Defaults to 200.
         
@@ -360,12 +358,12 @@ def plot_FE(df, current_mA=200, methane: bool=True, total_gas: bool=True):
         h2_color = 'w'
     else:
         h2_color = 'k'
-    ax.plot((df.index - 1) * .15, df['H2 FE/%'], label='Hydrogen', c=h2_color)
-    ax.plot((df.index - 1 )* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
+    ax.plot((df.index) * .15, df['H2 FE/%'], label='Hydrogen', c=h2_color)
+    ax.plot((df.index)* .15, df['C2H4 FE/%'], label='Ethylene', c='#1e81b0')
     if methane is True:
-        ax.plot((df.index - 1) * .15, df['CH4 FE/%'], label='Methane', c='C1')
+        ax.plot((df.index) * .15, df['CH4 FE/%'], label='Methane', c='C1')
     if total_gas is True:
-        ax.plot((df.index - 1) * .15, df['CH4 FE/%'] + df['C2H4 FE/%'] + df['H2 FE/%'], label='Total Gas', c='C2')
+        ax.plot((df.index) * .15, df['CH4 FE/%'].replace(np.nan, 0) + df['C2H4 FE/%'].replace(np.nan, 0) + df['H2 FE/%'].replace(np.nan, 0), label='Total Gas', c='C2')
     ax.set_xlabel('$t$ / h')
     ax.set_ylabel('Faradaic Efficiency / %')
     ax.set_ylim(0, 100)
