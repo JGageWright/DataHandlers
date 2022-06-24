@@ -353,7 +353,7 @@ def plot_FE(df, current_mA=200, methane: bool=True, total_gas: bool=True):
         for col in df:
             df[str(col) + ' FE/%'] = df[col] * calibrations[str(col)] / current_mA * 100
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize = (8, 3))
     if plt.rcParams['axes.facecolor'] == 'black':
         h2_color = 'w'
     else:

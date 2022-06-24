@@ -228,7 +228,11 @@ def CHI_txt_todict(path, dict):
         df['Zcx/ohm'] = df['Zre/ohm'] + 1j*df['Zim/ohm']
         df['Angular_Freq'] = df['Freq/Hz']*2*np.pi
     
-    dict[path] = df
+    # remove common extension tags
+    if path.lower().endswith('.txt') or path.lower().endswith('.dta'):
+        dict[path[0:-4]] = df
+    else:
+        dict[path] = df
     return dict
 
 
