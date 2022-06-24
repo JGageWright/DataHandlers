@@ -58,7 +58,12 @@ def CHI_plot(df, technique, option=None, label=None):
         ax.plot(df['Time/sec'], df['Potential/V'], label=label)
         ax.set_ylabel('$t$ / s')
         ax.set_ylabel('$E$ vs. RE / V')
-        
+    
+    elif technique.lower() in ['ca', 'pstep', 'multi-potential steps']:
+        fig, ax = plt.subplots()
+        ax.plot(df['Time/sec'], df['Current/A']*1000, label=label)
+        ax.set_xlabel('$t$ / s')
+        ax.set_ylabel('$i$ / mA')
         
     return fig, ax
 
@@ -162,6 +167,11 @@ def CHI_coplot(df_list, technique, ax=False, fig=False, option=None, labels=None
             ax.plot(df['Time/sec'], df['Potential/V'], label=labels[i])
             ax.set_xlabel('$t$ / s')
             ax.set_ylabel('$E$ vs. RE / V')
+            
+        elif technique.lower() in ['ca', 'pstep', 'multi-potential steps']:
+            ax.plot(df['Time/sec'], df['Current/A']*1000, label=labels[i])
+            ax.set_xlabel('$t$ / s')
+            ax.set_ylabel('$i$ / mA')
     
     # Draw legend if possible
     if draw_legend is True:
@@ -236,7 +246,7 @@ def CHI_coplot_from_dict(df_dict, technique, ax=False, fig=False, option=None, l
          
     return fig, ax
 
-def plot_imp_py(df: pd.DataFrame, freq: np.ndarray, fit: np.ndarray):
+def plot_imp_py(df: pd.DataFrame, freq: np.ndarray, fit: np.ndarray, no_bode: bool=False):
     """General quick plotting for circuits fit with impedance.py from data in standard format from CHI_txt() importing.
 
     Args:
@@ -254,19 +264,22 @@ def plot_imp_py(df: pd.DataFrame, freq: np.ndarray, fit: np.ndarray):
     ax.set_xlabel('$Z_{real}$ / $\Omega$')
     ax.set_ylabel('$-Z_{imaginary}$ / $\Omega$')
 
-    fig_bode, axs = plt.subplots(2)
-    axs[0].scatter(df['Freq/Hz'], df['Zmag/ohm'], label='Data', c='C0')
-    axs[0].plot(freq, [np.abs(ele) for  ele in fit], label='Fit', c='C1')
+    if no_bode is False:
+        fig_bode, axs = plt.subplots(2)
+        axs[0].scatter(df['Freq/Hz'], df['Zmag/ohm'], label='Data', c='C0')
+        axs[0].plot(freq, [np.abs(ele) for  ele in fit], label='Fit', c='C1')
 
-    axs[0].set_xscale('log')
-    axs[0].set_xlabel('$f$ / Hz')
-    axs[0].set_ylabel('$Z_{mag}$ / $\Omega$')
+        axs[0].set_xscale('log')
+        axs[0].set_xlabel('$f$ / Hz')
+        axs[0].set_ylabel('$Z_{mag}$ / $\Omega$')
 
-    axs[1].scatter(df['Freq/Hz'], -df['Phase/deg'], label='Data', c='C0')
-    axs[1].plot(freq, [-cmath.phase(ele)*180/np.pi for  ele in fit], label='Fit', c='C1')
+        axs[1].scatter(df['Freq/Hz'], -df['Phase/deg'], label='Data', c='C0')
+        axs[1].plot(freq, [-cmath.phase(ele)*180/np.pi for  ele in fit], label='Fit', c='C1')
 
-    axs[1].set_xscale('log')
-    axs[1].set_xlabel('$f$ / Hz')
-    axs[1].set_ylabel('$-\phi$ / $\circ$')
+        axs[1].set_xscale('log')
+        axs[1].set_xlabel('$f$ / Hz')
+        axs[1].set_ylabel('$-\phi$ / $\circ$')
     
-    return fig_nyq, ax, fig_bode, axs
+        return fig_nyq, ax, fig_bode, axs
+    
+    else: return fig_nyq, ax
