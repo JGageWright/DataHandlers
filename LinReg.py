@@ -91,7 +91,7 @@ class LinFixB:
         return np.polyval(self.coef, x)
     
     
-def linear_region(x, y, bounds: tuple=None, index=False):
+def linear_region(x, y, bounds: tuple=None, index=False, ax=None):
     """Fits specified region to a line and plots it over the data
 
     Args:
@@ -99,9 +99,10 @@ def linear_region(x, y, bounds: tuple=None, index=False):
         y (array): y data
         bounds (tuple, optional): Bounds of region to fit in units of x or array indicies if index is True. Defaults to None.
         index (bool, optional): If bounds should be read as array indicies. Defaults to False.
+        ax: existing axes to plot on. Defaults to None.
 
     Returns:
-        tuple: LinReg.PolyReg object containing linear fit, figure, axes
+        tuple: LinReg.PolyReg object containing linear fit, figure, axes or a tuple of fit, ax
     """
     if bounds != None:
         if index is True:
@@ -112,10 +113,45 @@ def linear_region(x, y, bounds: tuple=None, index=False):
         bound_idx = (0, len(x) - 1)
     fit = PolyReg(x[bound_idx[0]:bound_idx[1]], y[bound_idx[0]:bound_idx[1]], 1)
     
-    fig, ax = plt.subplots()
+    if ax == None:
+        fig, ax = plt.subplots()
+        newax = True
+    else:
+        newax = False
+        
     ax.scatter(x, y, c='C0')
-    
     x_space = np.linspace(x[bound_idx[0]], x[bound_idx[1]], 1000)
     ax.plot(x_space, fit.eval(x_space), c='C1')
     
-    return fit, fig, ax
+    if newax is True:
+        return fit, fig, ax
+    elif newax is False:
+        return fit, ax
+    
+
+
+def avg_region(x, y, bounds: tuple=None, index=False):
+    """Averages specified region
+
+    Args:
+        x (array): x data
+        y (array): y data
+        bounds (tuple, optional): Bounds of region to fit in units of x or array indicies if index is True. Defaults to None.
+        index (bool, optional): If bounds should be read as array indicies. Defaults to False.
+
+    Returns:
+        float: average of y data over region
+    """
+    if bounds != None:
+        if index is True:
+            bound_idx = bounds
+        elif index is False:
+            bound_idx = np.argmin(np.abs(x - bounds[0])), np.argmin(np.abs(x - bounds[1]))
+    elif bounds == None:
+        bound_idx = (0, len(x) - 1)
+    
+    fig, ax = plt.subplots()
+    ax.plot(x, y, zorder=0)
+    ax.scatter((x[bound_idx[0]],x[bound_idx[1]]), ((y[bound_idx[0]], y[bound_idx[1]])),
+               marker='|', s=250, c='C1', zorder=1)
+    return np.mean(y[bound_idx[0]:bound_idx[1]]), fig, ax
