@@ -331,6 +331,75 @@ def handle_GC_data(folderpath,
     df.reset_index(drop=True, inplace=True) # index from 0
     return df
 
+
+def integrate_N2(folderpath, 
+                   N2left, N2right, N2thresh, smooth,
+                   data_start_line: int=25,
+                   suppress_outputs: bool=False):
+    """Integrates N2 peak in TCD and draws a plot to check for leaks
+
+    Args:
+        folderpath (string): folder with ACS files
+        N2left (int): left edge limit
+        N2right (int): right edge limit
+        N2thresh (int): threshold value for peak picking
+        smooth (int): smooth value for peak picking
+        data_start_line (int, optional): _description_. Defaults to 25.
+        suppress_outputs (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        _type_: df of one column, the N2 peak integral. Indexes match other peaks.
+    """
+    
+    # This glob.glob makes an array of all the file names with ASC. 
+    filenames = glob.glob(folderpath + '/*.ASC')
+    natsortedfilenames = natsorted(filenames)
+    
+    # Instantiate arrays that will contain the files from both detectors
+    run = {}
+    
+    string_list = []
+    for filename in natsortedfilenames:
+        string_list.append(filename[-6:-4]) # Should throw error if file run number is > 99 (i.e. --D100)
+    
+    string_list = sorted(list(set(string_list))) # remove duplicates from finding TCD and FID run numbers
+    fire_numbers = sorted([int(i) for i in string_list])
+    # print(fire_numbers)
+    for idx, number in enumerate(fire_numbers):
+        run[number] = []
+        for filename in natsortedfilenames:
+            if 'TCD' + string_list[idx] + '.ASC' in filename:
+                run[number].append(filename)
+                
+    peak_dict = {}
+    for key in run:
+        peak_dict[key] = {}
+        for filename in run[key]:
+                
+            # Treat the TCD Data 
+            if 'TCD' in filename: 
+                if suppress_outputs is False:
+                    print(filename)
+                    plot_GC_data(filename, data_start_line)
+                N2_int = integrate_TCD_peak(filename, N2left, N2right, data_start_line, N2thresh, smooth, suppress_outputs=suppress_outputs)
+                peak_dict[key]['N2'] = - N2_int
+
+        # print("Peak dict:\n", peak_dict)
+        df = pd.DataFrame(peak_dict).T  # transpose
+        
+        # print recently computed peak table to user
+        if suppress_outputs is False:
+            print(df.tail())
+        
+    df.reset_index(drop=True, inplace=True) # index from 0
+    fig, ax = plt.subplots(figsize = (8, 3))
+    ax.plot((df.index) * .15, df['N2'].replace(np.nan, 0))
+    ax.set_xlabel('$t$ / h')
+    ax.set_ylabel('Nitrogen Peak Integral')
+    
+    return df, fig, ax
+
+
 def plot_FE(df, current_mA=200, methane: bool=True, total_gas: bool=True):
     """Plot Faradaic Effiencies
         Args:
